@@ -35,10 +35,12 @@
 #### a) Understand neural nets
 - http://www.deeplearningbook.org/
 - read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
+- http://cs231n.github.io/ (a lot of good practical advice)
+    - refer to here for tuning and stuff
 
 #### b) Do a project
 - https://www.kaggle.com/c/stumbleupon/data
-- try cnn, lstms, attention, and transfer learning using tfhub
+- try cnn, lstms, attention, and transfer learning using tfhub, use regularization, and try to tune optimally
 
 
 ### Additional
