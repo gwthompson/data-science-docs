@@ -12,7 +12,10 @@
 - http://www-bcf.usc.edu/~gareth/ISL/ (good practical advice)
 
 ### Understand model bias
-- 
+- slides on bias: https://github.com/parker84/data-science-docs/blob/master/ds_topics/model_bias.pptx
+- bias from conditioning: https://medium.com/causal-data-science/understanding-bias-a-pre-requisite-for-trustworthy-results-ee590b75b1be
+- censorship bias: https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html
+- some additional examples of bias: https://thenextweb.com/contributors/2018/10/27/4-human-caused-biases-machine-learning/?amp=1
 
 ### To Learn traditional Data Science
 
@@ -24,6 +27,7 @@
 
 #### c) Do a project
 - https://github.com/parker84/MMF_UofT/tree/master/credit_risk
+- data: https://www.kaggle.com/c/home-credit-default-risk
 
 ### Learn neural networks
 
