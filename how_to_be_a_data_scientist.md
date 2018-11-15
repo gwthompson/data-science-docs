@@ -30,7 +30,7 @@
 - https://github.com/parker84/MMF_UofT/tree/master/credit_risk
 - data: https://www.kaggle.com/c/home-credit-default-risk
 
-### Learn neural networks
+### To Learn neural networks
 
 #### a) Understand neural nets
 - http://www.deeplearningbook.org/
