@@ -10,6 +10,7 @@
 
 ### 2. Understand basics of ML
 - http://www-bcf.usc.edu/~gareth/ISL/ (good practical advice)
+- read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
 
 ### Understand model bias
 - slides on bias: https://github.com/parker84/data-science-docs/blob/master/ds_topics/model_bias.pptx
@@ -33,6 +34,7 @@
 
 #### a) Understand neural nets
 - http://www.deeplearningbook.org/
+- read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
 
 #### b) Do a project
 - https://www.kaggle.com/c/stumbleupon/data
