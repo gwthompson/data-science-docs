@@ -17,6 +17,7 @@
 - bias from conditioning: https://medium.com/causal-data-science/understanding-bias-a-pre-requisite-for-trustworthy-results-ee590b75b1be
 - censorship bias: https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html
 - some additional examples of bias: https://thenextweb.com/contributors/2018/10/27/4-human-caused-biases-machine-learning/?amp=1
+- Now in your projects below, and any of the projects you ever work on you need to be very concerned about these biases. These biases are what will result in catastrophic results in prod, and are much more important than selecting the optimal model
 
 ### To Learn traditional Data Science
 
