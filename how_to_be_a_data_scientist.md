@@ -12,7 +12,7 @@
 - http://www-bcf.usc.edu/~gareth/ISL/ (good practical advice)
 - read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
 
-### Understand model bias
+### 3. Understand model bias
 - slides on bias: https://github.com/parker84/data-science-docs/blob/master/ds_topics/model_bias.pptx
 - bias from conditioning: https://medium.com/causal-data-science/understanding-bias-a-pre-requisite-for-trustworthy-results-ee590b75b1be
 - censorship bias: https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html
