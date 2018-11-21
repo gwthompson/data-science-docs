@@ -19,6 +19,19 @@
 - some additional examples of bias: https://thenextweb.com/contributors/2018/10/27/4-human-caused-biases-machine-learning/?amp=1
 - Now in your projects below, and any of the projects you ever work on you need to be very concerned about these biases. These biases are what will result in catastrophic results in prod, and are much more important than selecting the optimal model
 
+### 4. learn the tools for data science:
+#### git 
+- intro to git: https://guides.github.com/introduction/git-handbook/
+- feature branches: https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow
+
+#### an IDE
+- recommend pycharm, vscode good to
+- learn them well
+
+#### debugger
+- built in, in many ides
+- also can ipdb
+
 ### To Learn traditional Data Science
 
 #### a) EDA:
