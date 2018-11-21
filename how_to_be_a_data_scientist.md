@@ -43,6 +43,7 @@
 #### c) Do a project
 - https://github.com/parker84/MMF_UofT/tree/master/credit_risk
 - data: https://www.kaggle.com/c/home-credit-default-risk
+- use git
 
 ### To Learn neural networks
 
@@ -55,6 +56,7 @@
 #### b) Do a project
 - https://www.kaggle.com/c/stumbleupon/data
 - try cnn, lstms, attention, and transfer learning using tfhub, use regularization, and try to tune optimally
+- use git
 
 
 ### Additional
