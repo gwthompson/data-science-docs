@@ -1,6 +1,6 @@
 # How to become a data scientist
 
-### 1. Understand the Fundamentals
+### 1. Understand the Fundamentals (you may be able to skip)
 
 ### stats
 - stats intro: http://www.greenteapress.com/thinkstats/
@@ -8,69 +8,94 @@
 ### Linalg
 - https://towardsdatascience.com/boost-your-data-sciences-skills-learn-linear-algebra-2c30fdd008cf
 
-### 2. Understand basics of ML
-- http://www-bcf.usc.edu/~gareth/ISL/ (good practical advice)
-- read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
-
-### 3. Understand model bias
-- slides on bias: https://github.com/parker84/data-science-docs/blob/master/ds_topics/model_bias.pptx
-- bias from conditioning: https://medium.com/causal-data-science/understanding-bias-a-pre-requisite-for-trustworthy-results-ee590b75b1be
-- censorship bias: https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html
-- some additional examples of bias: https://thenextweb.com/contributors/2018/10/27/4-human-caused-biases-machine-learning/?amp=1
-- Now in your projects below, and any of the projects you ever work on you need to be very concerned about these biases. These biases are what will result in catastrophic results in prod, and are much more important than selecting the optimal model
-
-### 4. learn the tools for data science:
+### 2. learn the tools for data science:
+- I'd recommend keeping these in mind, and then using them all when you begin your projects
 #### git 
 - intro to git: https://guides.github.com/introduction/git-handbook/
 - feature branches: https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow
 
 #### an IDE
 - recommend pycharm, vscode good to
-- learn them well
+- learn it well
 
 #### debugger
 - built in, in many ides
 - also can ipdb
 
-### To Learn traditional Data Science
-- Start w Alik's slides
+## To Learn traditional Data Science
+
+### a) Understand the content
+- Alik's slides (a lot of solid practical advice)
     - Ask me for them
-- Harvards DS course: http://cs109.github.io/2015/pages/videos.html
-    - 2013 version was really good
-    - this looks even better
-    - doing all the assignments would be good practice
-        - have them for 2013 course: https://github.com/cs109/content
+    - Or go here if you work at Deloitte: https://teams.microsoft.com/l/channel/19%3ac8ca2a1b3ef640d4a8841496cb2dc6a0%40thread.skype/MMF?groupId=285cdc67-512c-499f-ac59-ecccc2fe61fa&tenantId=36da45f1-dd2c-4d1f-af13-5abe46b99921
+- Refer to resources below / Google it (thank god for stack overflow) if anything is unclear
+    - If all else fails you can ask me :)
 
-#### a) EDA:
-- https://r4ds.had.co.nz/exploratory-data-analysis.html
-
-#### b) Learn sql
-- https://www.codecademy.com/learn/learn-sql
-
-#### c) Do a project
+### b) Start a Project
 - https://github.com/parker84/MMF_UofT/tree/master/credit_risk
 - data: https://www.kaggle.com/c/home-credit-default-risk
-- use git
+    - I'd recommend you put in a db
+- use all the tools mentioned above
+- refer to additional resources below when needed
+    - You may find the labs from Harvard DS course particularly useful
+
+### c) Learn More and Apply this to your project
+
+#### Data Science
+- Harvards DS course: http://cs109.github.io/2015/pages/videos.html
+    - 2013 version was really good, this looks even better
+    - doing all the assignments would be good practice, and you can check your work
+        - They have them for the 2013 course: https://github.com/cs109/content
+
+#### ML
+- http://www-bcf.usc.edu/~gareth/ISL/ (good practical advice)
+- read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
+
+
+#### EDA:
+- https://r4ds.had.co.nz/exploratory-data-analysis.html
+
+#### SQL
+- https://www.codecademy.com/learn/learn-sql
+
+#### More on Model Bias (Important)
+- slides on bias: https://github.com/parker84/data-science-docs/blob/master/ds_topics/model_bias.pptx
+- bias from conditioning: https://medium.com/causal-data-science/understanding-bias-a-pre-requisite-for-trustworthy-results-ee590b75b1be
+- censorship bias: https://lifelines.readthedocs.io/en/latest/Survival%20Analysis%20intro.html
+- some additional examples of bias: https://thenextweb.com/contributors/2018/10/27/4-human-caused-biases-machine-learning/?amp=1
+- In your projects, and any of the projects you ever work on you need to be very concerned about these biases. These biases are what will result in catastrophic results in prod, and are much more important than selecting the optimal model
+
 
 ### To Learn neural networks
 
 #### a) Understand neural nets
-- Start w Ofer's slides, at least the 1st 2 lectures, then pair with the following:
+- Start w Ofer's slides
     - Ask me for them
-- Deep learning for NLP: http://cs224d.stanford.edu/syllabus.html
-    - looks really solid but I haven't vetted all the content yet
-- http://www.deeplearningbook.org/
-    - read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
-- http://cs231n.github.io/ (a lot of good practical advice)
-    - refer to here for tuning and stuff
-        - 
+    - Or if you work at Deloitte see here: https://teams.microsoft.com/l/channel/19%3a4212dae79c4649aab88c14f48105e2ff%40thread.skype/General?groupId=285cdc67-512c-499f-ac59-ecccc2fe61fa&tenantId=36da45f1-dd2c-4d1f-af13-5abe46b99921
+- Refer to resources below if anything is unclear
+    - For linear algebra stuff see the linalg resource posted in fundamentals
+    - For everything else see the deeplearning book / google it :)
+    - If all else fails you can ask me :)
 
 #### b) Do a project
 - https://www.kaggle.com/c/stumbleupon/data
 - try cnn, lstms, attention, and transfer learning using tfhub, use regularization, and try to tune optimally
-- use git
+- use all the tools mentioned above
+- I'd recommend using tensorflow as well, as it will force you to develop a deeper understanding of the problem and give you unlimited flexibility for the networks you can build in the future
+    - but Keras is good too
+
+#### c) Learn More and Apply this to your project
+- Deep learning for NLP: http://cs224d.stanford.edu/syllabus.html
+    - looks really solid but I haven't vetted all the content yet
+    - They post all midterms and solns posted for you to try as well
+- http://www.deeplearningbook.org/
+    - read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
+- See model bias section above
+- http://cs231n.github.io/ (a lot of good practical advice)
+    - refer to here for tuning and stuff: http://cs231n.github.io/neural-networks-3/
+
 
 
 ### Additional
 - see helpful_data_science_books_and_blogs.md
-- http://datasciencemasters.org/
+- (free open DS masters) http://datasciencemasters.org/
