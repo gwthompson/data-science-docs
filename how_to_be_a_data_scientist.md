@@ -33,6 +33,13 @@
 - also can ipdb
 
 ### To Learn traditional Data Science
+- Start w Alik's slides
+    - Ask me for them
+- Harvards DS course: http://cs109.github.io/2015/pages/videos.html
+    - 2013 version was really good
+    - this looks even better
+    - doing all the assignments would be good practice
+        - have them for 2013 course: https://github.com/cs109/content
 
 #### a) EDA:
 - https://r4ds.had.co.nz/exploratory-data-analysis.html
@@ -48,10 +55,15 @@
 ### To Learn neural networks
 
 #### a) Understand neural nets
+- Start w Ofer's slides, at least the 1st 2 lectures, then pair with the following:
+    - Ask me for them
+- Deep learning for NLP: http://cs224d.stanford.edu/syllabus.html
+    - looks really solid but I haven't vetted all the content yet
 - http://www.deeplearningbook.org/
-- read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
+    - read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
 - http://cs231n.github.io/ (a lot of good practical advice)
     - refer to here for tuning and stuff
+        - 
 
 #### b) Do a project
 - https://www.kaggle.com/c/stumbleupon/data
@@ -61,3 +73,4 @@
 
 ### Additional
 - see helpful_data_science_books_and_blogs.md
+- http://datasciencemasters.org/
