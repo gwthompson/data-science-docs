@@ -10,6 +10,7 @@
 
 ### 2. learn the tools for data science:
 - I'd recommend keeping these in mind, and then using them all when you begin your projects
+
 #### git 
 - intro to git: https://guides.github.com/introduction/git-handbook/
 - feature branches: https://www.atlassian.com/git/tutorials/comparing-workflows/feature-branch-workflow
@@ -32,14 +33,23 @@
     - If all else fails you can ask me :)
 
 ### b) Start a Project
-- https://github.com/parker84/MMF_UofT/tree/master/credit_risk
+- 1. You'll need to make some features
+- 2. Build an xgboost model and evaluate, then engineer more features to get a logistic regression model to perform as effectively
 - data: https://www.kaggle.com/c/home-credit-default-risk
     - I'd recommend you put in a db
+- example: https://github.com/parker84/MMF_UofT/tree/master/credit_risk
 - use all the tools mentioned above
-- refer to additional resources below when needed
+- Then try to improve further:
+    - Implement different models
+    - Engineer more features using more complicated methods (consider different unsupervised approaches)
+    - Consider different preprocessing techniques
+    - Make sure you understand how these models are working, what are the tradeoffs, why is one performing better than the other, how could you exlpain this to a laman or a fellow Data Scientist?
+        - You should be able to justify why one performs better than the other, and should have an idea before you implement it
+        - What are the potential biases from each model / feature you engineer?
+- Refer to additional resources below when needed
     - You may find the labs from Harvard DS course particularly useful
 
-### c) Learn More and Apply this to your project
+### c) Learn More and Apply this to your project (or other projects)
 
 #### Data Science
 - Harvards DS course: http://cs109.github.io/2015/pages/videos.html
@@ -79,7 +89,12 @@
 
 #### b) Do a project
 - https://www.kaggle.com/c/stumbleupon/data
-- try cnn, lstms, attention, and transfer learning using tfhub, use regularization, and try to tune optimally
+- Then try to improve further:
+    - Implement different models
+    - Consider different preprocessing techniques, can you create more data?
+    - Make sure you understand how these models are working, what are the tradeoffs, why is one performing better than the other, how could you exlpain this to a laman or a fellow Data Scientist
+        - You should be able to justify why one performs better than the other, and should have an idea before you implement it
+    - What are the potential biases?
 - use all the tools mentioned above
 - I'd recommend using tensorflow as well, as it will force you to develop a deeper understanding of the problem and give you unlimited flexibility for the networks you can build in the future
     - but Keras is good too
