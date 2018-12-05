@@ -47,7 +47,7 @@ docker run --name mmf_db  -d -p 5431:5432 postgres
 ```bash
 jupyter notebook
 ```
-
+- to change the theme: https://stackoverflow.com/questions/46510192/how-to-change-the-theme-in-jupyter-notebook
 - if you get frozen see if you can run anything in another cell
     - if not, try to stop the kernel, still not working restart it
 - make sure to exit ipdbs before running a cell again
