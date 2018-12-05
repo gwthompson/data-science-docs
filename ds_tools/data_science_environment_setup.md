@@ -44,10 +44,10 @@ docker run --name mmf_db  -d -p 5431:5432 postgres
 ### Jupyter Notebook (For EDA)
 - apart of anaconda already
 - just move to the top of the directory you want, make sure the python path is set and run:
-
 ```bash
 jupyter notebook
 ```
+
 - if you get frozen see if you can run anything in another cell
     - if not, try to stop the kernel, still not working restart it
 - make sure to exit ipdbs before running a cell again
