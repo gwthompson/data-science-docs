@@ -41,7 +41,7 @@ docker run --name mmf_db  -d -p 5431:5432 postgres
 - shift + shift => search entire project (filename or class or method)
 - highlight, right click -> refector or rename also both really useful
 
-### Jupyter Notebook (For EDA)
+### Jupyter Notebook (For EDA and QA)
 - apart of anaconda already
 - just move to the top of the directory you want, make sure the python path is set and run:
 ```bash
@@ -61,6 +61,7 @@ jupyter notebook
     - y -> switch to code
     - i -> stop the kernel
     - r -> restart the kernel
+- if you use ``` ``` in a markdown box you can then paste jupyter outputs into it and they'll keep their format
 
 ### git 
 - intro to git: https://guides.github.com/introduction/git-handbook/
