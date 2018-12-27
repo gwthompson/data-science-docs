@@ -1,0 +1,83 @@
+
+# What Does Imply Causation
+- Gold standard for establishing causality: double-blind controlled trial (or the AB test equivalent)
+- But in reality this isn't always reasonable, so we must turn to other measures
+
+#### Correlation Does Not Imply Causation
+- Notice when trying to identify whether A causes B, one must consider the potential causes of A, as well as variables that confound with A
+- If either of these are not accounted for in the model then causation could be incorrectly attributed to A
+- You need to include these in the model, and then we can remove the effects of these additional variables
+- But if you have X -> Y -> Z, and you create a linear regression model with X,Y as features you'd end up with Y being significantly predictive of Z and X not predictive at all
+
+# Technical Primer On Causality
+
+## Intro
+
+#### Definitions
+- $Y$ d-separates $X$ and $Z$
+    - $P(Z|X,Y) = P(Z|Y)$
+    - => $P(Z,X|Y) = P(Z|Y)P(X|Y)$
+        - <=> $Z,X$ are conditionally independent given $Y$
+-  $P(X_1,...,X_n) = \prod^n_{i=1} P(X_i | par(X_i))$
+    - $par(X_i)$ = parents of $X_i$ 
+    
+#### Ex: X -> Y -> Z
+- Notice if $Z,X$ are conditionally independent given $Y$ <=> $Y$ d-separates $X$ and $Z$
+- => $z(x,y) = E[z|x,y] = \sum_z zP(z|x,y) = \sum_z zP(z|y) = E[z|y] = z(y)$
+    - this can also be seen when expanding out the linear formulas
+    - => the regression is independent of x, and regressing using y alone
+- When trying to determine causality its important to understand the distributions that generate the data, if you only look at the regression model, we lose the true causal relationship in this case
+
+#### Direct Vs. Total Effect
+- Total Effect = total effect even after a series of convoluted chain of events, the sum of direct and indirect effects
+- Direct effect = direct effect one variable has on another
+- When measuring the Total Effect one needs to be aware of bias
+
+#### Bias
+- Neither of these are direct or indirect causal relationships between X and Z
+- (fork) Y -> Z and X
+    - If you were to regress Z on X you would have a non zero regression coefficient
+    - This is called confounding
+    - To alleviate this problem you can condition on Y
+- (collider) X and Z -> Y
+    - If you condition on Y you'd get a correlation between Z and X too even though there's no causal relation
+    - To alleviate you have to make sure you don't condition on Y 
+
+## "Back Door" Criterion
+- Used to estimate the total causal effect of one variable on another variable
+- Defn (Back Door):
+    - Defining variables:
+        - Let $Z$ be the variables we're controlling for
+        - We want to estimate the effect of $X_i$ on $X_j$ 
+    - A set of variables $Z$ satisfies the back-door criterion relative to an ordered pair of variable $(X_i,X_j)$ in a DAG if:
+        - i) No node in $Z$ is a descendent of $X_i$ 
+            - Don't condition on any descendents (effects) from the cause we're interested in
+            - Like the collider scenario above, how we can't condition on $Y$
+        - ii) $Z$ blocks every path between $X_i$ and $X_j$ that contains an arrow intto $X_i$
+            - If there's a confounding path between cause and effect we condition on something along that path
+            - Like the fork example, when we condition on $Y$
+- Thm (Back-Door Adjustment):
+    - If a set of variables $Z$ satisfies the back-door criterion relative to $(X,Y)$
+    - Then the causal effect of $X$ on $Y$ is identifiable and is given by the formula:
+    - Pf: just use the facts about conditioning, and law of total probability
+$$P(y|\hat{x}) = \sum_zP(y|x,z)P(z)$$
+- How to relate to linear regression?
+    - $E[Y|do(x)] = \sum_Z YP(Y|do(X)) = \sum_{X,Y} YP(Y|X,Z)P(Z) = \sum_Z E[Y|X,Z]P(Z)$
+
+
+
+# Applications
+- Any time a business is trying to decide on what it should alter in order to effect some end result
+
+#### To take into account more complex causal consequences of actions:
+
+- It may be assumed that clicks on an ad will increase the page views of to the link attached, but how will this effect the page views of other pages on the site?
+- Altering ingredients of a product, how does this affect profits?
+
+# Time Series
+- See the Time Series document on how to model causality of time series data
+
+# References
+- Causal Data Science: https://medium.com/causal-data-science/causal-data-science-721ed63a4027
+    - Multiple posts to help people learn about causality in data science
+- Technical Primer on Causality: https://medium.com/@akelleh/a-technical-primer-on-causality-181db2575e41
