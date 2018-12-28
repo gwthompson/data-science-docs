@@ -1,0 +1,61 @@
+
+
+
+# Binary Classification
+
+### Curves
+- ROC curve (and auc)
+    - Invariant to resampling
+        - As FPR and TPR would increase by the same proportion as you increase the proportion of positives but maintain the same precision
+- Prec-Recall Curve (and average precision)
+    - Not invariant to resampling
+        - As the higher the number of positives the higher up you're going to be starting on the y axis => the higher the average precision
+    - Better than the others for highly imbalanced data 
+- Lift Curve
+    - Useful when evaluating model performance after selecting some cutoff of positive predictions
+
+### Evaluation At a Certain Cutoff / Selecting Cutoff
+- F1 scores meaningless bc just an arbitrary number 
+    - why do we care about the geometric average?
+    - TODO: more detail
+- What matters is users preference over prec and recall
+
+# Multi-class Classification
+- TODO
+
+
+# Continous Evaluation
+
+### MAPE
+
+$$MAPE = \frac{100}{n} \sum^n_{t=1} \frac{|y_t - \hat{y_t}|}{y_t}$$
+
+- For the most part you can use MAPE
+    - More intepretable, and comparable to other models in other applications
+- But sometimes doesn't make sense
+    - Will result in errors if $y_t=0$
+    - MAPE (as defined above) assumes $y_t>0$
+    - In which case underforecasts treated differently than over forecasts
+        - As an underforecast can never contribute more than 100% but an overforecast can
+    - Can use MAD as an alternative which can handle negative data fine, but won't punish outliers as much as RMSE
+
+
+### MSE / RMSE
+
+$$RMSE = \sqrt{\frac{1}{n} \sum (y_t - \hat{y_t})^2}$$
+
+- Scale dependent => meaningless to compare across different scales
+- More influenced by outliers
+- Not as interpretable
+- Can handle negative data
+    - By Squaring the errors the negative and positive errors don't cancel out each other and stay in existence till the end
+
+### $R^2$
+
+$$ R^2 = 1 - \sum \frac{(y_t - \hat{y_t})^2}{(y_t - \bar{y})}$$
+
+- Can be increased just from large variance in $y_t$
+
+
+# Resources:
+- What are the shortcomings of the Mean Absolute Percentage Error (MAPE)? https://stats.stackexchange.com/questions/299712/what-are-the-shortcomings-of-the-mean-absolute-percentage-error-mape
