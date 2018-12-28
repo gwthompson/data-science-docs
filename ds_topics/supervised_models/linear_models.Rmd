@@ -1,0 +1,78 @@
+# linear regression
+
+### standard OLS assumptions and how to check
+
+#### for valid inference of model coefficients:
+- this link has some good points: https://www.analyticsvidhya.com/blog/2016/07/deeper-regression-analysis-assumptions-plots-solutions/
+- although from point 5 about normal distribution:
+    - often the normal assumption isn't super important
+    - unless you have a very skewed distrbiution because the distbiution is asymptotically valid you should be okay
+    - not relevant if you dont care about inference
+    - it is true that outliers could also be the cause of the deviation from normality though
+- Important to ensure errors appear iid 
+    - otherwise the distributional assumptions of the normal distribution through CLT are invalid
+- additionally its important to handle severe outliers
+    - not accounting for this results in inadequate parameter estimation
+- additional examples with data: https://dziganto.github.io/data%20science/linear%20regression/machine%20learning/python/Linear-Regression-101-Assumptions-and-Evaluation/
+
+
+### for valid parameter estimation:
+- no severe outliers, especially ones with high leverage
+- linear and additive
+    - otherwise inadequate fit
+- no heteroskeastity
+    - Otherwise will result in increasing or decreasing errors as you increase or decrease the dataset
+
+### issues and how to fix them
+- outliers: 
+    - use a t distribution over: 
+    - use a loss function other than MSE, like MAD
+    - could remove outliers
+- heteroscedasticty
+    - box cox transformation can help a lot
+    - often log works pretty well too (translate any polynomial relation between variables and dependent into linear relations)
+- non linear additive relations
+    - tranform x and y to make it linear, boxcox can helper here too
+- errors not iid
+    - if serially correlated you'll want to use a time series model
+    - if correlated into different groups, you'll want to use a linear mixed model
+
+### Performing OLS
+
+#### Coefficient Acceptance
+- $t_j$ below is distributed by the t distribution assuming that the assumptions hold
+- $\hat{\beta_j}$ = estimated value of $\beta_j$
+- $\beta_j$ = hypothesized value of the coefficient
+
+$$t_j = \frac{\hat{\beta_j} - \beta_j}{SE(\hat{beta_j})$$
+
+#### References:
+- http://www.stat.cmu.edu/~hseltman/309/Book/chapter9.pdf
+
+
+# logistic regression
+- assumptions: many the same as linear regression
+- can use vif for it too
+- use deviance or pearson residuals instead of normal ones
+- check linearity by the relation between TODO
+
+# poisson regression
+
+#### assumptions
+- overdispersion: https://www.theanalysisfactor.com/glm-r-overdispersion-count-regression/
+    - => doensnt follow a poisson anymore
+
+
+# Linear Mixed Models / Bayesian Hierarcical Models
+
+## 
+
+# Understanding Interactions Between Features
+
+
+
+# Variants of Linear Models
+
+### Local Linear Models
+
+### Splines
