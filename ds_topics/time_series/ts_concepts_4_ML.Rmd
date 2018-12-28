@@ -1,0 +1,75 @@
+# Important Time Series Concepts for ML
+
+## Stationarity
+- A time series is stationary if it has constant mean and variance
+- If your time series is stationary you can model the serial correlations of the time series with itself and other time series more effectively
+    - As the seasonal and trend effects will be removed, which will mask the effect of serial correlations
+- In order to be able to approximate the distributions around errors and model parameters you want to be able to to use the Wold Decompopistion theorem (https://en.wikipedia.org/wiki/Wold%27s_theorem) which implies that when stationary the sequence can be approximated using ARMA
+- It isn't always necessary to stationarize your data if you're not using ARMA models, but it can still be helpful
+    - In particular the ways in which you would stationarize and the motivations behind doing so are helpful things to keep in mind when developing features for a ML on time series data
+
+### Ways to Stationarize
+
+#### Removal of Non-stationary Because of Means
+- Removal of trends
+    - Substract the trend from the time series
+- Removal of seasonal effects
+    - Substract the seasonal effects from the time series (dummy variables in linear regression)
+- Differencing
+    - Can difference 1-n lags before to remove trends 
+        - Usually just 1 lag before
+    - Can difference n lags before to remove seasonal patterns (ex: 7 days before)
+- Differencing vs Trend and Seasonal effect subtraction:
+    - Differencing is easier to implement and more appropriate for more scenarios without needing a complicated trend model 
+    - But less intuitive to understand / QA and to explain
+    
+#### Removing Non-stationarity Because of Variance
+- Boxcox
+
+## Spurious Correlation
+- Model is suspicious if the $R^2$ is higher than the Durbin-Watson
+    - As recall $R^2$ can be inflated due to high variance and a serious trend can cause very high variance
+- TODO: how would this compare to MAPE?
+    - Should test this
+
+### Sampling Time Series (For Train/Test Splits)
+- iid does not hold anymore
+
+#### Why should you care that iid doesn't hold anymore
+- Sampling train test splits can be biased and over-perform
+- Because there will be stronger serial correlations between train, and test datasets
+    - Thus identifying a relationship between $x$ and $y$ in the training dataset that's from the same time period will be more likely to have that same relation in the test dataset
+    - Inflating the performance on the test data
+
+#### How To Sample Properly
+- https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-of-time-series-data
+
+### Evaluation of a Time Series Model
+- In order for a time series model to perform effectively you want to ensure it can perform on different time periods
+- As when it goes into prod its going to be applied on different time periods
+
+#### Ways to Properly Evaluate A Time Series Model (Back-Testing)
+- If you cross validate as it's outlined above you don't need to worry about it as much
+- But its always best practice to back-test your model
+    - test on future data ideally, or on historical data and see how it performs
+- When building out your back-testing framework you want to implementation to be as similar as possible to the way it will be deployed in production
+    - This reduces the chances of look-ahead bias (as in prod this obviously wouldn't be possible to do)
+    - Reduces the amount of code that needs to be re-written which in turn reduces possible prod bugs
+    - Will give you the most realistic evaluation
+    - For an example of this see event-driven vs for-loop back-test systems for finance
+
+#### Back-Testing Potential Pitfalls
+- Survivorship bias
+    - Need to consider why certain time series are being removed from your dataset 
+    - Stocks for example, the worse stocks are being removed from your data
+    - So you must ensure to include all time series that were present at any time in your test up until the current point
+        - Don't remove time series that finished before the end, or that haven't finished yet
+    - If your modelling lifetimes in order to model the lifetimes of those that haven't finished yet you'll likely need to use survival analysis
+- Look-ahead bias
+    - Ensure no future data sneaks in
+    - For example if one of your features is the slope of a linear regression model from now until 1 week into the future. And you're testing data consists of that next week this would be leaking future information
+
+#### Resources: 
+- https://www.quantstart.com/articles/Should-You-Build-Your-Own-Backtester
+- https://scikit-learn.org/stable/modules/cross_validation.html#cross-validation-of-time-series-data
+
