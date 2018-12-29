@@ -1,0 +1,137 @@
+
+
+## Important Probability Concepts
+- Law of total probability
+- LLN
+- CLT
+- Bayes thm
+- Functions of random variables
+- Order Statistics
+- Expectation and Variance
+
+
+
+## Probability
+- $P$ is a probability if:
+    - $P(E) \geq 0$ for any event $E$
+    - $P(S) = 1$
+    - $P(\cup^{\infty} E_i) = \sum^{\infty} P(E_i)$
+- $P(A^c) = 1 - P(A)$
+- $P(A \cup B) = P(A) + P(B) - P(A \cap B)$
+- always draw a diagram
+- try to break up into disjoint parts
+- Law of total probability:
+    - $B_j$ are disjoint $\cup^k B_j = A$, $P(B_j)>0$
+    - $P(A) = \sum_{j=1}P(B_j)P(A|B_j)$
+    - pf) $P(A) = P(\cup^k (A \cap B_j)) = \sum^k P(A \cup B_j) = \sum^k P(B_j)P(A|B_j)$
+- for any events $P(\cup^n E_i) \leq \sum^n P(E_i)$
+    - pf) let $A_i = E_i - \cup^{i-1} E_J$
+- $P(A \cap B) = P(A) - P(A \cap B^c)$
+    - => $P(X<x, Y<y) = P(X<x) - P(X<x, Y>y)$
+- Bayes Rule:
+    - $P(Y|X) = \frac{P(Y|X)P(X)}{P(Y)} = \frac{P(Y|X)P(X)}{\sum_x P(Y|X)P(X)}$
+
+## Expectation and variance
+- $E(X) = \int_{-\infty}^{\infty} x f(x) dx$
+- $E(X) = \int_0^{\infty} P(X>z) dz - \int_{-\infty}^0 P(X<z) dz$
+    - think of it like instead of multiplying x by the probability of x
+    - you just just over the probability x times 
+    - $E(X) = \sum_{k=1}^{\infty} P(X \geq k)$
+- $E(X) = \int_{-\infty}^{\infty} x dF(x)$
+    - think of it like computing the area of a rectangle, you can do this w an integral by moving along one axis
+    - that's what were doing, were moving along the F(x) side of the rectangle instead of the x side of the rectangel
+    - this gives us the EV bc the instantaneous chnage in F(x) corresponds to f(x) (pdf)
+    - to solve though you need to get dx again, and in order to you you compute the d/dx[F(x)] and put this next to x in the integral
+        - bc $g'(x)dx = dg(x)$
+- for $Y = g(X)$ $E(Y) = \int_{-\infty}^{\infty} g(x) f(x) dx$
+- $E(Y) = E[E(Y|X)]$
+- $V(Y) = V[E(Y|X)] + E[V(Y|X)]$
+from the lecture notes we know that (for a cts non neg rv): 
+- $E(Y|X=x) = \int y dcdf_Y{Y|X|(y|x)}$
+    - $E[Y] < \infty$ => $E[X] = \int y \ pdf_{Y|X}(y|x) dy$
+    - if $Y$ is discrete => $E[Y|X=x] = \sum_y p(y|X=x) \ y$
+    - basically looking at a slice of the joint distribution where X=x
+    - dont forget to use the same bounds when computing this as you were for the join density
+- $E[Y | X > c] = \int_{-\infty}^{\infty}  p_{Y | X > c}(y) y dy$
+    - $= \int_{-\infty}^{\infty}  \frac{P(Y,  X > c)}{P(X > c)} dy$
+
+## Convergence
+- defs
+    - $X_n ->^p X$ <=> for any $\epsilon > 0, P(|X_n - X| > \epsilon) $ -> 0 as n -> inf
+    - a) $X_n ->^p X$ <=> $lim_{n->\infty} P(|X_n - X| > \epsilon) = 0$
+    - b) $X_n ->^{L^p} X$ <=> for $p>0$ $lim_{n-> \infty} E(|X_n - X|^p) -> 0$
+    - d) $X_n -> ^d X$ <=> $lim_{n->\infty} P(X_n \leq x) = P(X \leq x)$
+    - $X_n ->^{a.s} X$ <=> $P(lim_{m-> \infty} sup |X_n - X| = 0) = 1$
+- implications
+    - $X_n ->^{L^P} X$ => $X_n ->^p X$
+    - $X_n ->^{as} X$ => $X_n ->^p X$
+    - c) $X_n ->^p X$ => $X_n -> ^d X$
+- LLN
+    - $X_i \sim^{iid}$ rvs w $E(|X_n|) < \infty$ and $\mu = E[X_i]$
+    - $\bar{X_n} ->^{as} \mu$ as 
+    - if $E(X_n^2) < \infty$ => converges in $L^2$ as well
+        - pf 
+            - $E[(\bar{X_n} - \mu)^2)] = Var(\bar{X_n}) = nVar(X_i)/n^2 -> 0$
+- Levys CLT
+    - $X_n$ iid, $Var(X_n)=\sigma^2$, $E(X_n)=\mu$ => $\sqrt{n}(\bar{X_n} - \mu) / \sigma ->^d N(0,1)$
+
+
+## Functions of Random Variables (p2)
+- thm 29: $Y = g(X)$ and X is discrete => $pmf_Y(y) = \sum_{x:g(x)=y} pmf_X(x)$
+- thm 30: $Y = g(X)$ and X is cts, and g is an appropriate transformation like cts increasing:
+    - $cdf_Y(y) = \int_{{x: g(x) \leq y}} pdf_X(x) dx$
+    - think it works though regardless of whether increasing or decreaing
+        - TODO: double check
+- thm32: $X$ cts RV, $g$ is a 1-1 and diff, => $pdf_Y(y) = pdf_X(g^{-1}(y)) |det(\frac{d}{dy} g^{-1}(y))|$ 
+    - **dont forget the abs values**
+    - example for when it makes no difference, but still good to understand:
+        - $f_Y(y) = pdf_X(Y + a)|1|$ (Where $Y = X - a$)
+
+
+## Inequalities
+- chebychevs: $P(|X - \mu| \geq \alpha) \leq \sigma^2 / \alpha^2$
+- markovs: $X \geq 0, E(X) = \mu < \infty$ => for any $\alpha>0$ $P(X \geq \alpha) \leq \mu/\alpha$
+
+## Distributions and Order Statistics
+- see the distributions.Rmd doc
+
+## Cool Puzzles
+- A drunkard executes a “random walk” in the following way: Each minute he
+takes a step north or south, with probability 1
+2 each, and his successive step
+directions are independent. His step length is 50 cm. Use the central limit theorem to approximate the probability distribution of his location after 1 h. Where
+is he most likely to be?
+- The number of offspring of an organism is a discrete random variable with
+mean μ and variance σ2. Each of its offspring reproduces in the same manner. Find the expected number of offspring in the third generation and its
+variance.
+- 2.5.14 (alternating basketball shooters)
+- d14 #3,4b)
+- say you have 3 models all predicting probability, what is the probability of something happening?
+- bayesian network stuff?
+- say you have a model that predicting P(Y|X) given Y what is the prob X has occured?
+- A test has a true positive rate of 100% and false positive rate of 5%. There is a population with a 1/1000 rate of having the condition the test identifies. Considering a positive test, what is the probability of having that condition?
+- You have a model that predicts machinery malfunctions for a given machine P(Y|X)
+    - what is the prob of the 1st failure happening before time t?
+        - use min order statistic
+    - what is the probability 10 machines failing?
+        - obviously not independent
+- model the P(Z|X) and P(Y|X) that is the P(Z+Y|X)?
+    - what if Z,Y binomial? negative binomia? poisson?
+    - what if Z is poisson anf Y is negative binomial?
+    - what about Z/2? Z+4 
+        - think of scenarios though
+- you know that some component of your RV is approximated by a poisson distribution X, but you need (X+4)/2
+    - how do you approximate this?
+    - can it be modelled?
+- Here a process, what do you expect the value to be?
+    - bayesian probably
+- using understandings of joint and marginal distributions to represent data
+    - hmms?
+    - bayesian nets?
+    - gmms
+    - malobolis distance
+    - partial dependency plots?
+    - how would you find the marginal distribution of a multivariate joint density by trying to cancel out 2 of the variables?
+- model something with a distribution   
+    - poisson or negative binomial or linear regression
+    - and then determine probability distribution of combinations of those

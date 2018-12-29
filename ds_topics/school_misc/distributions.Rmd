@@ -1,0 +1,54 @@
+# Probability Distributions
+
+## Standard Distributions
+- X_i ~ poisson(lam)
+    - $E(X_i) = \lambda = V(X_i)$
+    - $Y = \sum^n X_i ~ Pois(n \lambda)$
+    - Sum of poissons is poisson
+- $X \sim geom(p)$
+    - => $p(k) = (1-p)^{k-1}p$
+    - = probability of k trials before 1st success
+- expontial distribution
+    - $f(x) = \lambda e^{-\lambda x}$ (for x>0 else 0)
+    - $F(x) = 1 - e^{-\lambda x}$ (for x>=0 else 0)
+    - models wait times between events
+    - memoryless
+    - $E[X] = \frac{1}{\lambda}$
+- negative binomial
+    - as defined in class
+      - number of trials until kth success
+      - $P(X=k) = {n-1 \choose k-1}(1-p)^{n-k}p^k$
+    - as defined elsewhere:
+      - given r failures (thats when we stop) prob of getting X successes
+      - $P(X=x) = {x+r-1 \choose x-1} p^x (1-p)^r$
+      - -1 bc you know the final one will be x?
+          - thus its not considered in the additional rearranging options
+      - $E[X] = \frac{rp}{1-p}$
+      - $V[X] = \frac{pr}{(1-p)^2}$
+- binomial
+    - $E[X] = np$
+    - $V[X] = np(1-p)$
+- uniform
+    - when computing P(a<X<b) notice the P(X=x) = 1 / (b-a)
+        - P(X=x)=1 only if b-a=1
+    - cdf = (x-a) / (b-a)
+- multivariate normal $Z \sim N_k(\mu, \Sigma)$
+    - each marginal distribution is normal
+    - 2 dimensions of a multivariate normal are indep iff Cov(Z_i, Z_j) = 0
+    - $AZ + b \sim N_m(A\mu + b, A \Sigma A^T)$
+- hypergeo 
+    - urn contains n balls, r black and n-r white
+    - X = number of black balls drawn when taking m balls w out replacement
+    - $P(X=k) = \frac{{r \choose k} {n-r \choose m-k}}{n \choose m}$
+    - number of ways to choose them are = number of ways to choose the black ones * number of ways to choose the white ones
+        - bc for any selection of the black ones there are the same number of possible options for the white ones
+
+## Order Statistics
+- when trying to show proofs for cdfs, try to represent in way that all xi have to be above or below in order for the P to be true, then can just use P(X_i <> x)^n
+- P(X<x, Y<y) = P(X<x) - P(X<x, Y>y)
+- $Y_n = max(x_1,..,x_n)$, $Z_n = min(x_1,..,x_n)$
+- $cdf_{Z_n, Y_n} = F(y)^n - P(Y_n <= y, Z_n >= z) = F(y)^n - [F(y) - F(z)]^n$
+- $pdf_{Z_n, Y_n} = n(n-1)f(z)f(y)[F(y)-F(z)]^{n-2}$
+$$pdf_{X_{(i)},X_{(j)}}(x_i, x_j) = \frac{n!}{(i-1)!(j-i-1)!(n-j)!}f_X(x_i)f_X(x_j)[F_X(x_i)]^{i-1}[F_X(x_j) - F_X(x_i)]^{j-1-i}[1-F_X(x_j)]^{n-j}$$
+- $f_{X_{(j)}}(x) = \frac{n!}{(j-1)!(n-j)!}f_X(x)[F_X(x)]^{j-1}[1-F_X(x)]^{n-j}$
+    - order doesnt matter for any of them in either side
