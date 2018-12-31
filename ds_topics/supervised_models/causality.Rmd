@@ -64,7 +64,18 @@ $$P(y|\hat{x}) = \sum_zP(y|x,z)P(z)$$
 - How to relate to linear regression?
     - $E[Y|do(x)] = \sum_Z YP(Y|do(X)) = \sum_{X,Y} YP(Y|X,Z)P(Z) = \sum_Z E[Y|X,Z]P(Z)$
 
+# Data Processing Inequality
+- The data processing inequality is fundamental to data science, machine learning, and social science.
+- $I(X,Y)$ = common information between $X$ and $Y$
+- Theorem (Data Processing Inequality)
+    - $X -> Y -> Z$ => $I(X ;Z) \geq I(X; Z)$
+- Notice this => you can only lose information from processing data / feature engineering 
+- TODO: finish
+- https://medium.com/@akelleh/the-data-processing-inequality-da242b40800b
 
+# Implementation With Pandas Dataframes
+- https://medium.com/@akelleh/causal-inference-with-pandas-dataframes-fc3e64fce5d
+- TODO: finish
 
 # Applications
 - Any time a business is trying to decide on what it should alter in order to effect some end result
