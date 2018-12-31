@@ -7,10 +7,14 @@
 - ROC curve (and auc)
     - Invariant to resampling
         - As FPR and TPR would increase by the same proportion as you increase the proportion of positives but maintain the same precision
+        - $TPR = \frac{1.1 TP}{1.1 {TP + FN}}$
+        - FPR is not affected
 - Prec-Recall Curve (and average precision)
     - Not invariant to resampling
         - As the higher the number of positives the higher up you're going to be starting on the y axis => the higher the average precision
     - Better than the others for highly imbalanced data 
+    - http://scikit-learn.org/stable/modules/generated/sklearn.metrics.average_precision_score.html#sklearn.metrics.average_precision_score
+    - https://stats.stackexchange.com/questions/157012/area-under-precision-recall-curve-auc-of-pr-curve-and-average-precision-ap
 - Lift Curve
     - Useful when evaluating model performance after selecting some cutoff of positive predictions
 
