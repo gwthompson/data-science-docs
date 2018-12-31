@@ -28,3 +28,12 @@
 - kmeans not a free lunch: http://varianceexplained.org/r/kmeans-free-lunch/
 - empirical bayes: http://varianceexplained.org/r/empirical_bayes_baseball/
 - How to use tsne effectively: https://distill.pub/2016/misread-tsne/
+
+
+### Some cool stuff for financial forecasting:
+-	http://www.unofficialgoogledatascience.com/2017/07/fitting-bayesian-structural-time-series.html?m=1
+-	https://www.quantstart.com/articles/Cointegrated-Augmented-Dickey-Fuller-Test-for-Pairs-Trading-Evaluation-in-R
+-	https://www.quantstart.com/articles/Generalised-Autoregressive-Conditional-Heteroskedasticity-GARCH-p-q-Models-for-Time-Series-Analysis
+-	https://www.quantopian.com/
+-	https://www.datacamp.com/community/tutorials/lstm-python-stock-market
+- https://www.quantstart.com/articles/Should-You-Build-Your-Own-Backtester
