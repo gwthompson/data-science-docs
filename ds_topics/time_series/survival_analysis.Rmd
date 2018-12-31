@@ -1,0 +1,111 @@
+---
+title: "Survival Analysis"
+output: html_document
+---
+
+
+### Why Use Survival Analysis
+- effectively handling right and left censored data
+- ideal when time until an event occurring is the desired piece of information
+- not usually used for prediction
+    - primarily just for analysis
+    - as extending to testing data can be tricky?
+    - TODO: add more detail on here
+        - Recall you talked to Cam about this
+
+
+### Censorship (Form of Bias)
+- right censored 
+    - not sure when certain individuals end their lives
+    - is very common
+    - removing these individuals will bias your data to have shorter lifetimes than it should, in particularly in the later ends of the window
+        - bc longer lifetimes will be more likely to be removed when we filter out right censored data
+        - and in the later ends of the window the only ones that will be left will be the individuals with the shortest lifetimes
+- left censored data
+    - occurs when you don't know when your element was born
+    - will also result in bias if removed bc longer lifetimes are more likely to be removed
+    - Can set left-censored=True in certain models in lifelines too
+- Left Truncated Data
+    - Individuals dieing before entering the study
+    - Both KaplanMeierFitter and NelsonAalenFitter in Lifelines have an optional argument for entry
+        - Which specifies offset from birth to entering the study
+    - Also useful when subjects enter the study at different points in their lifetime
+    - TODO: add more details, look into inverval censorship too
+     
+### Intro
+- Survival Function = $S(t) = P(T>t)$
+- Hazard Curve = probability of dying at time t
+
+### Modelling Probability of Event Occuring over Time Without Features
+
+#### Modelling Survival Function
+- Kaplan-Meier (Non-Parametric)
+    - $\hat{S(t) = \prod_{t_i<t} \frac{n_i - d_i}{n_i}$
+    - $d_i$ = number of death events at time $t_i$
+    - $n_i$ = number of subjects at risk of death before time $t_i$
+    - Wouldn't allow for predictive modelling though, at least likely not effectively, as it will be overfit to the training data
+        - Used more for inference
+- Parametric modelling
+    - Allows more guidance in the relation between $t$ and survival as parametric models do
+    - Preferred to Kaplan-Meier when said distributional assumptions hold
+    - if there is a constant probility of an event occuring over time => model w an exponential
+        - $T \sim exp(\lambda)$
+        - => $S(t) = \lambda e^{- \lambda t}$, $t \geq 0$, (1 - cdf(t))
+        - => this repesents the probability of having to wait longer than t for the event to occur, where it usually occurs at a constant rate
+        - https://lifelines.readthedocs.io/en/latest/lifelines.fitters.html#module-lifelines.fitters.exponential_fitter
+    - if there is a changing probability of an event occuring over time => model w a weidbull
+        - => $S(t) = e^{- (\lambda t)^{\rho}}$ (beware of how $\lambda$ )
+        - https://lifelines.readthedocs.io/en/latest/lifelines.fitters.html#module-lifelines.fitters.weibull_fitter
+    - Can be used for predictive modelling (extending to new data)
+        
+#### Modelling Hazard Function
+- Parametric
+    - Can be derived from each parametric method of defining $S(t)$
+- Nelson-Aalen Estimator (Non-Parametric)
+    - Can be used to estimate the cumulative hazard function
+    - $\Delta(t) = \int^t_0 \lambda(z)dz$
+    - $\hat{\Delta(t)} = \sum_{t_i \leq t} \frac{d_i}{n_i}$
+        - $d_i$ = number of deaths at $t_i$
+        - $n_i$ = number of susceptible individuals 
+
+#### Resources
+- https://lifelines.readthedocs.io/en/latest/Survival%20analysis%20with%20lifelines.html
+- https://lifelines.readthedocs.io/en/latest/py-modindex.html
+
+### Modelling with Features (Regression)
+- Simple Cox regression
+    - $h(t) = h_0(t)exp(\sum \beta_i x_i)$
+    - $h_0(t)$ = baseline hazard, which can take any form based on each t
+        - Can choose one of the hazard functions outlined above
+    - Notice the feature are time-invariant here
+- Aalen Additive Regression
+    - $h(t) = b_0(t) + \sum_i b_i(t) x_i$
+    - Each coefficient now varies over time as well
+    - Do you fit a new regression then for every $t$?
+        - yes
+    - https://lifelines.readthedocs.io/en/latest/lifelines.fitters.html#module-lifelines.fitters.aalen_additive_fitter
+        - Some can be specified to be static though and some to be time-varying
+- Cox's Time Varying Proportional Hazard Model
+    - $h(t) = h_0(t)exp(\sum \beta_i x_i(t))$
+    - "Often an individual will have a covariate change over time. An example of this is hospital patients who enter the study and, at some future time, may recieve a heart transplant. We would like to know the effect of the transplant, but we cannot condition on whether they recieved the transplant naively."
+    - We account for changes to covariates over time with $x_i(t)$
+    - https://lifelines.readthedocs.io/en/latest/Survival%20Regression.html#cox-s-time-varying-proportional-hazard-model
+- More complicated ML models for survival analysis, and in general better for prediction
+    - https://scikit-survival.readthedocs.io/en/latest/api.html
+    - Linear models, ensembles, svms
+    - TODO: look into more
+- Resources:
+    - http://lifelines.readthedocs.io/en/latest/Survival%20Regression.html
+
+### Evaluation
+- https://lifelines.readthedocs.io/en/latest/Survival%20Regression.html#model-selection-in-survival-regression
+- https://lifelines.readthedocs.io/en/latest/Survival%20Regression.html#cross-validation
+
+### EDA
+- look at t against survival, and condition on feature values
+- try a few different conditions to see whether you think coefficients should be time dependent or not
+
+### Additional
+
+#### Recurrent event survival models
+- https://stats.stackexchange.com/questions/305636/survival-analysis-in-time-series
