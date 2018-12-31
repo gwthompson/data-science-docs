@@ -135,3 +135,6 @@ variance.
 - model something with a distribution   
     - poisson or negative binomial or linear regression
     - and then determine probability distribution of combinations of those
+- if you have a hand w n cards in it, was is the probability of getting 4 cards the same number/face
+    - soln
+        - use hypergeo
