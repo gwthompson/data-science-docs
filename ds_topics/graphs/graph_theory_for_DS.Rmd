@@ -1,0 +1,528 @@
+# Graph Theory Applications For Data Science
+
+
+## Converting Your Data Into A Graph
+- Allows you to: 
+    - Better understand your space, particularly useful in high dimensional spaces with little context
+        - Allows you to understand how close in the space points are to each other
+    - Leverage different clustering algorithms with a lot of control around them
+    - Detect communities in your data 
+    - Derive additional graph based features
+
+```python
+import networkx as nx
+from sklearn.metrics import pairwise_distances
+
+# Defining a graph based on epsilon distance away
+A = (pairwise_distances(X, metric="cosine") < 0.35)*1.0
+G = nx.from_numpy_array(A)
+G_simple = nx.Graph(G) # undirected
+nx.info(G_simple) 
+
+# can also define a graph from pandas df
+G = nx.from_pandas_edgelist(data, source='origin', target='dest', edge_attr=True,)
+```
+
+## Network Properties
+
+#### Relevant Graph Statistics
+- histogram of degrees
+- avg degree = $\frac{2E}{N}$
+    - avg in degree = $\frac{E}{N}$
+- diameter of graph = longest shortest path
+- density of the graph
+    - undirected = $\frac{2E}{n \choose 2}$
+    - directed = $\frac{E}{n \choose 2}$
+- avg path length
+- avg centrality
+- shortest paths
+
+#### Implementation in NetworkX
+
+```python
+degrees = G.degree().values()
+ins = list((G.in_degree()).values())
+outs = list((G.out_degree()).values())
+
+nx.density(G)
+nx.diameter(G_simple) # slow
+nx.average_shortest_path_length(G_simple) # slow
+G.number_of_nodes()
+
+
+
+dijpath = nx.dijkstra_path(FG, source='JAX', target='DFW') # shortest path
+# see 2.3 below for more details
+all_paths = nx.all_simple_paths(FG, source='JAX', target='DFW')
+
+```
+
+## Connectedness
+- Node Connectivity = number of nodes we must delete from the graph G until is its disconnected
+- Algebraic Connectivity = 2nd smallest eigenvalue of the Laplacian matrix
+    - $> 0$ <=> graph being disconnected
+    - Think its faster to compute than Node connectivity
+    
+```python
+nx.number_connected_components(G)
+nx.algebraic_connectivity(G_simple)
+nx.average_degree_connectivity(G) # For a node of degree k - What is the average of its neighbours' degree?
+# {1: 19.307692307692307, 2: 19.0625, 3: 19.0, 17: 2.0588235294117645, 20: 1.95}
+
+G_components = nx.connected_component_subgraphs(G)
+counts_per_comp = pd.DataFrame(
+    {"counts_per_component": 
+     [comp.number_of_nodes() for comp in G_components]})
+
+p = ggplot(counts_per_comp, aes("counts_per_component")) +\
+    geom_histogram()
+print(p)
+```
+
+## Centrality
+- Used to determine  which nodes are most central in the graph
+- Also used to detecting communities in a graph
+- Degree Centrality = number of edges on a node
+- Closeness Centrality = Of a node is the average length of the shortest path from the node to all other nodes
+- Betweenness Centrality = % of all shortest paths that pass through a given node
+    - For example in a social media network one would expect the influencers in particular ones that bridge different genres to have a higher value for this
+        - Notice how this measure would be more representative as opposed to just number of followers
+
+```python
+between =  nx.betweenness_centrality(G_simple)
+max_node, max_bc = max(between.items(), key=lambda x: x[1])
+max_node, max_bc
+```
+
+## Community Detection
+- https://yoyoinwanderland.github.io/2017/08/08/Community-Detection-in-Python/
+- Community Detection vs Clustering
+    - Community Detection is essentially clustering with the objective of identifying high average degree subgraphs
+    - Whereas clustering can segment the points by a number of different criterion
+- TODO: add more detail on different options
+
+
+## Clustering
+
+#### Spectral Clustering
+- Defns
+    - $cut(A_i, \bar{A_i})$ = total weight over the edges between $A_i$ and the rest of the graph
+    - $vol(A_i)$ = sum over the weights of the edges inside the subgraph $A_i$
+    - $|A_i|$ = number of vertices in the subgraph $A_i$
+- Intuition
+    - Minimizing the sum over the edges from inside to outside a cluster 
+    - While trying to keep cluster sizes large
+        - Either large wrt number of nodes or total of the weights
+- Normalized Spectral Clustering is approximation of the graph cut problem:
+    - $Ncut(A_1,...,A_n) = \sum^k_{i=1} \frac{cut(A_i, \bar{A_i})}{vol(A_i)}$
+- Unnormalized Spectral Clustering is an approximation of the graph cut problem:
+    - $RatioCut(A_1,...,A_n) = \sum^k_{i=1} \frac{cut(A_i, \bar{A_i})}{|A_i|}$
+
+## Graph Randomizations
+- Helpful to understand how significantly different metrics are from those of a random graph
+- We see this used below in representing graph vulnerability
+- To create the random graph, use the same number of vertices and edges but randomly add the edges
+
+## Graph Vulnerability
+- Can see how vulnerable graphs are to attacks
+- Order the nodes by betweenness centrality and then look at the number of connected components you as remove the most to least connected nodes in the graph
+    - This can then be compared w removing nodes from and random graph as well
+- TODO: improve
+
+## PageRank
+- Useful if you're trying to rank something (like web pages, or papers) where you want to rank to be increased based on the number of links from quality other objects linking to it, and the value added from a given link to be diminised if that same objects links more webpages from its own web page
+- Nice explanation: https://www.cs.princeton.edu/~chazelle/courses/BIB/pagerank.htm
+
+## Resources:
+- https://yoyoinwanderland.github.io/2017/08/08/Community-Detection-in-Python/
+- https://www.kaggle.com/crailtap/basic-network-analysis-tutorial
+- spectral clustering: http://citeseerx.ist.psu.edu/viewdoc/download;jsessionid=8E93412411219774DBC98F13FCFEAF33?doi=10.1.1.165.9323&rep=rep1&type=pdf
+- https://www.quora.com/Whats-the-difference-between-clustering-in-graph-and-community-detection-in-graph
+- https://www.analyticsvidhya.com/blog/2018/04/introduction-to-graph-theory-network-analysis-python-codes/
+
+
+# Relevant Parts from MAT332 (UofT Graph Theory) for DS
+
+## 1 Fundamentals
+
+### 1.1 Graph intro (peterson, isomorphisms)
+- with n vertices, the number of simple graphs are $2^{n \choose 2}$
+- 1.2.5 Every u,v walk contains a u,v path
+- 1.2.11 a graph w n vertices and k edges has at least n-k components
+- defns
+    - bipartite = 2 sets of vertices st that w in each subgraph they have no edges
+- 1.1.30 determining whether 2 graphs are isomorphic:
+    - 1) same number of vertices
+    - 2) # edges
+    - 3) # length of circuit
+    - 4) degree of nodes?
+    - 2 graphs iso iff complements iso
+    
+### 1.3 Vertex Degrees and Counting
+- **1.3.3 degree sum formula $\sum d(v_i) = 2 e(G)$**
+- **1.3.28: dis are the degree sequence of a graph iff $\sum d_i$ is even**
+    
+### 1.4 Directed Graphs
+- 1.4.18 propn: In a digraph $G$ \sum d^+(v) = e(G) = \sum d^-(v)$
+- propn 1.4.30 every tournament has a king
+
+## 2 Trees 
+- Trees are particularly useful to determine ways to span a network
+- Finding optimal spanning trees are used in hdbscan in order to define an all encompasing graph that covers all points that haven't already been removed bc they were attributed to noise
+    - Then the edges are removed from this in order to make the clusters
+
+### 2.1 Basic Properties
+- **2.1.4: tree <=> conn and no cycles <=> conn and n-1 edges <=> no cyles and n-1 edges <=> 1 u,v path for all u,v**
+- 2.1.5 **every connected graph contains a spanning tree, every edges in a tree is a cut edge, add one edge to tree forms exactly 1 cycle**
+
+### 2.2 Spanning Trees and Enumeration
+- 2.2.3 Thm: Cayley's formula
+    - for a set $S \subset N$ of size $n$, there are $n^{n-2}$ trees w vertex set $S$
+    - useful for determining numbe rof possible trees in a complete graph
+- 2.2.12 $\tau(G) = (-1)^{s+t}det(Q*)$
+    - given a loopless graph G let Q be the graph laplacian
+    - Q = [d1,..,dn] I - Adjacency matrix
+    - find Q* by deleing row s and column t from Q
+    - the $\tau(G) = (-1)^{s+t}det(Q*)$
+    
+### 2.3 Optimization and Trees
+- Kruskals algo (produces min weight spanning tree)
+    - init: set $E(H) = \emptyset$
+    - iteration from text:
+        - if next cheapest edge joins 2 comps of H => include it otherwise discard it
+        - terminate when connected
+- Dijstras algo (produces shortest path)
+    - start w S just u, and t(v) will be the weight on the adjacent edges of u, and infinity for the rest
+    - then for some $v$ outside $S$ such that $t(v) = min_{z \notin S} t(z)$, add $v$ to $S$
+        - explore all edges from $v$ to update the tentative distances: $t(z)$ to $min\{t(z), t(v) + w(v,z)\}$
+        - so consider all edges from $v$ now to other vertices and update the tentative distances based on whether the sum of the weights are smaller or not frmo u to v to z or whether u to z
+- BFS algo (defines distances? unweighted)
+    - input = unqeighted graph, and start vertex u
+    - init R = {u}, S = empty, d(u,u)=0
+    - iter: 
+        - as long as R is not empty we search from the 1st vertex v of R
+        - the neighbours of v not in $S \cup R$ are added to the back of R as assigned distance d(u,v)+1
+        - then v is removed from the front of R and placed in S
+- bfs vs dijkstres? bfs is faster but cant handle weighted graphs
+
+## 3 Matchings and Factors
+
+### 3.1 Mathcings and Covers
+
+#### defns:
+- 3.1.1
+    - $M$ = matching = subset of edges with no shared end points
+    - the vertices incident to the edges of $M$ are called saturated, rest called unsaturated
+    - mathcing is perfect if it saturates every vertex
+- 3.1.4: 
+    - maximal mathing is a matching that cannot be enlarged
+    - maximum matching = matching w at least as many edges as any other in G
+
+#### 3.1.11 thm: Halls An X,Y bigraph $G$ has a matching that saturates X iff $|N(S)| \geq |S|$ fir all $S \subset X$
+
+#### Konig thm: 3.1.16: if $G$ is a bipartite graph => maximum siz eof a matching in $G$ = minumum size of a vertex cover of $G$
+
+### 3.2 Mathcing Algorithms and Applications
+
+- A matching can be an effective way to represent pairing different nodes together, where edges can't share endpoints
+- Examples: 
+    - Matching people to jobs
+        - Make a complete bipartite graph with one side the people and the other the jobs
+        - Can also weight the relation between each person and each job and maximize or minimize
+    - Matching people to tasks
+        - Can be weighted as well
+    - Any time you're trying to match some subset up w another subset, in a way in which you can't have 2 items from 1 subset paired up w the other subset
+        - In that case you want to use bipartite matchings
+        - This can then be extended to k subsets, making a k-partite graph and then finding the min/max matching
+    - 3.2.5 ex:
+        - farming company w n farms and n plants
+        - cant have 2 farms connected to the same plant and vice versa
+            - => WTF: mathcing that will maximize profits based on values of the edges
+        - profit from sending farm i output to plant j = wij, place this on edge xiyj
+        - the govt claims too much corn is being produced so it will pay tje company not to process corn
+            - pay ui if the company agrees not to use farm i and vj if the company doesnt use plant j
+        - if ui+vj < wi,j => company makes more money using the edge xiyj than by taking the govt money 
+        - the govt wants to min $\sum u_i + \sum v_j$
+ 
+#### 3.2.7 Lemma: for  aperfect mathcing $M$ and cover $(u,v)$ in a weighted bipartite graph $G$ $c(u,v) \geq w(M)$. And $c(u,v)=w(M)$ iff M has edges xiyj st ui+vj=wij => M and (u,v) are optimal
+- w(M) is maximum and c(u,v) is minimum
+- **essnetially you're just trying to find a cover st when you add u_i + v_j you're going to be bigger than wij => you'll have chosen the largest possible pairing**
+    - bc really the objective is to identify a mathcing to max value given the weight matrix
+    - <=> choose transversal of weight matrix to max value
+    - so were not really minning any cost, were just using this principle to max the weights on the mathcing
+
+#### **3.2.9: Hungarian Algorithm (To Find a Maximum Weight Mathcing and Min Cost Vertex Cover for Bipartite graph))**
+- https://en.wikipedia.org/wiki/Hungarian_algorithm
+- idea: initialize the cover st you have equality, alter to get a perfect matching
+- 1. initialize the cover, and get the original excess matrix
+    - initialize using 0s on the top, and max weight along the LHS
+    - then fill in the excess matrix
+        - subtract the weights from u_i + v_j
+- 2. we idenitify a maximum mathcing of G_u,v by choosing 0s, st you have no 2 0s in the same row or col
+    - we know this is a maximum bc G_u,v on has edges where you get a 0
+    - picking a 0 from each row or col => have the maximum number of possible edges bc you have a bipartite graph
+    - notice: these represent a vertex cover, and a covering set of size <n => progress towards a soln
+        - since the next weighted cover costs less
+        - TODO: expand
+    - try to select 0s st you'll cancel out more 0s in the next col
+- 3. idenitify R and T, and add $\epsilon$ to $v_j \in T$ and subtract it from $u_i \in R$
+    - you add and subtract in this way to maintain equality
+    - T = cols w 0 and R = rows w 0
+    - $epsilon = min\{u_i + v_j - w_{ij} : x_i \in X-R, y_j \in Y-T\}$
+        - for all i,j st you're not in any row or col that has been picked
+    - **note: you wont have R and T on opposite ends of an edge, bc they're apart of a vertex cover**
+    - **note: if you have > 1 0 in a row or col that needs to be in R or T**
+        - note: you dont need both Rs and Ts can have all one or the other
+    - note: epsilon is just the min of the values, dont go and subtract again
+- 4. update the excess matrix
+    - u_i+v_j - w_i,j
+    - add $\epsilon$ to values in T cols
+    - remove $\epsilon$ from values not in R rows
+    - quick ref:
+        - crosses will up one
+        - Ts w out R will stay same, 
+        - not Rs will drop
+        - Rs one own will stay same
+- 5. how do you know when you're done?
+    - have a 0 in each row and each col
+- How do we know were still balanced?
+    - take the sum over the weights and costs and see they're all equal
+    - think about what you're adding and subtracting to each row and you see
+
+#### Applications of hungarian
+- can be anything with costs, in which case you just set w(M) = 0 
+    - but can also handle stuff more complicated if you want to ensure that these costs are above some value (wi,j)
+- https://en.wikipedia.org/wiki/Hungarian_algorithm
+- Assigning people to different tasks each of which costs different amounts
+- Can also be tasks where you do need a weighted cover too
+    - that satisfy the constraint that ui+vj >= wij
+    - such as the farming example above, or 
+
+
+## 4 Connectivity and Paths
+
+### 4.1 Cuts and Connectivity
+
+#### defns
+- connectivity of G = $k(G)$ is the min size of $S$ st $G-S$ is disconn or 1 components
+- $G$ is $k$-connected if its connectivity is >= k
+- a block of a graph is a maximal connected subgraph of $G$ that has no cut vertex
+
+#### exs 
+- 4.1.2: a connectivty of complete = n-1, but for all other graphs $k(G) \leq n(G)-2$
+
+#### **4.1.9 if $G$ is a simple graph => $k(G) \leq k'(G) \leq \delta(G)$**
+
+#### tricks
+- cna have a sep set by removing all the edges around a node => G is k conn for $k \leq \delta(G)$
+
+
+### 4.2 k-conn Graphs
+
+#### **4.2.17 thm: (Mengers)  k(x,y) >= lam(x,y)**
+
+#### **4.2.19 thm k'(x,y) >= lam'(x,y)**
+
+## 4.3 Network Flows
+
+### defns
+- 4.3.2
+    - $val(f) = f^-(t)-f^+(t)$ = netflow into the sink
+    - maximum flow = feasible flow of maximum value
+      - that's the onjective, maximize amount of flow into the sink
+- 4.3.4
+    - when f is a feaible flow in a network N => an **f-augmenting path** is a source-to-sink path in the underlying G st for all $e \in E(P)$:
+        - a) if P follows e in the forward direction $f(e) < c(e)$
+        - b) if P follows e in the backward direction => $f(e) > 0$
+    - tolerance of P = $min_{e \in E(P)} \epsilon(e)$
+        - st $\epsilon(e) = c(e)-f(e)$ when $e$ is forward on $P$ and 
+        - $\epsilon(e)=f(e)$ when $e$ is backward on P
+        - => smallest distance between flow and capacity (if its in the forward direction)
+        - and smallest flow if its in the backward direction
+    - forward on P => when P goes over this edge its going in the forward direction
+        - http://www.mathcs.emory.edu/~cheung/Courses/323/Syllabus/NetFlow/aug-path.html
+- 4.3.6
+  - **source/sink cut [S,T] = edges from the source set S to a sink set T**, where S and T partition the set of nodes
+      - w s in S and t in T
+  - capacity of the cut [S,T], written cap(S,T) is the total capacity on the edges os [S,T]
+
+### 4.3.5 Lemma: if $P$ is an $f$-augmenting path w tolerance $z$ then changing flow by +z on forward edges and -z on backward edges results in a feasible flow f' st $val(f') = val(f)+z$
+
+### **4.3.8 $val(f) \leq cap(S,T)$ (f feasible flow)**
+
+### 4.3.11 in every network, the max value of the feasible flow = min capacity of source/sink cut
+
+### **4.3.9: fred fulford**
+- https://www.hackerearth.com/practice/algorithms/graphs/maximum-flow/tutorial/
+- WTF maximal flow in this graph, from s to t
+- constraint: 
+    - flow on edge cant exceed capacity of the edge
+    - inflow = outflow for all vertices but s and t
+- algorithm
+    - 1) start w init flow = 0
+    - 2) while there is f-augment paths (from s to t)
+        - add the path to the flow
+        - recall f-augmenting path <=> path st e in forward => f(e) < c, backward => f(e)>0
+            - **Note: f(e) > 0 => you can only traverse backwards on an edge if there's positive flow on it already, otherwise you'll be subtracting flow from an edge w 0 flow which would give you f(e) < 0**
+    - 3) then you can add the tolerance to this path
+        - you subtract on the backwards paths though
+    - 4) repeat until you cant go any longer
+- example
+    - notice see which capacity you can go in from s, try to fill up the neighbours of s and you're done
+    - can use the backward edge if after you minned the tolerance from it is > 0 still
+- if optimal max flow => min cut = max flow (4.3.11)
+    - min cut = flow on edges that are separating the 2 sets
+    - min cut you only count capacity
+    - cutting graph into 2 subsets in a way that gives you the min capacity
+    - cap(S,T) = capacity of edges leaving S and going to T, not T to S
+
+### 4.3.12: if all capacities are integer capacities => theres a max flow assigning integral (integer) flow to each edge => some max flow can be partitions into flows of unit value along paths from s -> t
+
+
+### Net Flow Applications
+- 4.3.16 Baseball elimination problem
+    - edges on s capacity = W-wi
+    - connect to xi (inf weighted) 
+    - which connect to y_i,j (weighted w ai,j = number of remaining games between xi and xj)
+    - weights on edges into t not from y_i,j = 0
+    - rest of the weights = inf
+- https://en.wikipedia.org/wiki/Maximum_flow_problem#Real_world_applications
+    - Airline Scheduling
+    - Circulation–demand problem
+- TODO: add more on 4.3 (supply and demand)
+
+## 5 Coloring of Graphs
+
+### 5.1 Vertex Coloring
+- Useful for scheduling anything
+- Allocating specific items to certain time periods or places, where there's constraints around the scheduling of different items
+    - Constraints can be represented as edges between vertices
+
+### 5.1.6 def
+- clique number = w(g) = max size of a clique in G
+
+### **5.1.7 propn: $\chi(G) \geq w(g), \chi(G) \geq n(G)/\alpha(G)$**
+- 1st bc every element in clique needs a different color
+- 2nd bc each color class is an indep set => has at least $\alpha(G)$ vertices
+- $\alpha(G) =$ max size of indep set
+
+### **5.1.12 Greedy Coloring**
+- given a vertex ordering $v_1,...,v_n$ of $V(G)$
+- color them in this order, assigning to $v_i$ the smallest indexed color, not already used in its lower-indexed neighbours
+    - => color each vertex as the smallest color that has not been used by one of its neighbours
+
+### **5.1.13: propn $ \chi(G) \leq \Delta(G) + 1$**
+- each vertex has at most $\Delta(G)$ earlier neighbours => greedy coloring cant use more than $\Delta(G)+1$ colors
+    - why +1? bc a given vertex can have $\Delta(G)$ earlier neighbours => itself would need to be another color
+
+
+## 6 Planar Graphs
+
+### 6.1 Embeddings
+
+#### defns
+- 6.1.5
+    - open set in the plane is a set $U \subset R^2$ st for every $p \in U$ all points w in some small distance from p belong to U
+    - a region = open set U thta contains a polgonal u,v-curver for ever pair of u,v in U
+    - faces of a planar graph are the maximal regions of the plane that contain no point used in the embedding
+- 6.1.7
+    - dual graph G* of a plane graph G = plane graph whose vertices correspond to the faces of G, and the edges of G* correspond to the edges of G as follows:
+        - if e is an edge of G w face X on one side and face Y on the other => endpoints of e* are x,y
+            - **=> can have a loop if there's an edge with the same face on either side**
+        - => order of degree in G* = number of edges bounding this face
+- 6.1.17
+    - a graph is outerplanar if it has an embeddings w every vertex on the boundary of the unbounded face
+### 6.1.5 rmk
+- understanding faces better: http://discretetext.oscarlevin.com/dmoi/sec_planar.html
+    - sections that a planar embedding would divide the space into 
+    - just think of drawing a graph with no edges crossing, each of these regions that the graph has divided the space into is considered a face
+
+
+
+#### **6.1.21 Eulers thm: if a connected plane graph $G$ has n vertices, e edges, and f faces, => $n-e+f=2$**
+- might be the most important theorem in this course
+
+ ### **6.1.23 if $G$ is a simple planar graph w >= 3 vertices => $e(G) \leq 3 n(G) - 6$**
+ - also if its triangle  free: $e(G) \leq 2n(G)-4$
+ 
+## 6.2
+
+#### **6.2.2 A graph is planar iff it DN contain a subdivision of $K_5$ or $K_{3,3}$**
+ - **dont forget to check for subdivisions**
+ - start by looking for indep sets of size you need
+    - look across the graph
+
+### 6.3
+ 
+#### **6.3.1 thm: Every planar graph is 5-colorable (also 4-colorable)**
+
+# 7 Edges
+- Useful for scheduling in pairs, like you need to have edges being scheduled and cant have endpoints shared
+- Like scheduling a tournament
+- TODO: more examples
+
+## 7.1 Line Graphs and Edge Coloring
+
+### **7.1.10 thm: if G is a simple graph:  $ \Delta(G) \leq \chi'(G) \leq \Delta(G) + 1$**
+
+### **7.1.7 if G is bipartite => $\chi'(G) = \Delta(G)$**
+
+
+#### Specific Problems
+- shortest paths
+    - shortest path from a->b
+- Assignment problems
+    - pairing employers with employees
+- https://en.wikipedia.org/wiki/Social_network_analysis
+    - TODO: get more examples from here
+- 2.1.6, 2.1.9
+- most important theorem: eulers: n-e+f=2 for conencted planar graph
+    - 6.1.21
+- graph coloring of planar graphs: 6.3
+    - art gallery problem :6.3.12
+- Make some examples from the supplies and demands section of 4.3
+    - TODO
+- Applications of Graph Theory from mat332_uoft_d16 final
+    - a. Because of a forest fire, 20 alligators, 30 birds, 15 cats, and 20 dogs need medicine, There are three animal hospitals nearby, each with a limited amount of medicine for each type of animal. Also, each hospital has a maximum capacity of 30 animals total.
+        - Hospital X: Can help 0 alligators, 27 birds, 12 cats, and 0 dogs.
+        - Hospital Y: Can help 15 alligators, 17 birds, 0 cats, and 16 dogs.
+        - Hospital Z: Can help 7 alligators, 0 birds, 12 cats, and 13 dogs.
+        - Problem: Determine how many animals of each type to send to each hospital. Your goal is to maximize the number animals helped.
+        - Soln
+            - You can create a network flow out of this problem and then use fred fulford to solve it
+            - To create the network, define an s and t nodes
+            - Then create nodes for each animal
+                - and connect s to these
+                - set capacity on each edge as the number of animals
+            - create nodes for each hospital, define edges from every animal to each hospital, and weight the edges w the correponding capacities that each hospital has for each animal
+                - also connect these edges to t and define the capacity to be infinity
+    - c. You;re organizing a ping-pong tourney
+        - Every participant has a list of other people they want to play against
+        - Determine a schedule st 2 players compete against each other iff both players want to compete against each other
+        - Each player can play 1 game at a time
+        - You should minimize the number of games played
+        - Soln
+            -  we could define an edge if both players want to play against each other
+            - if we color the edges
+                - => need to make sure that no 2 edges that share an endpoint are the same color
+                    - as this => they're playing at the same time and sharing an edgepoint => sharing a person => person playing 2 games at once
+            - we can then use 7.1.10 thm: if G is a simple graph:  $ \Delta(G) \leq \chi'(G) \leq \Delta(G) + 1$
+                - To give us a good indication as to how many games were going to need to schedule
+- n commitees but peoople are in more than one comittee
+    - Need to determine how to schedule k committee meetings
+    - Soln
+        - If a person is in 2 comittees those commitees cant have meetings at the same time
+        - Define the graph as every commitee is a vertex, and there;s edges between vertices iff a member is in both committess
+        - Notice then we just need to color the vertices st each color has no adjacent vertices
+- There are some factories that produce goods and some villages where the goods have to be delivered. They are connected by a networks of roads with each road having a capacity c for maximum goods that can flow through it. The problem is to find if there is a circulation that satisfies the demand.
+    - soln:
+        - use net flows
+- placing security cameras in a museum, how many do we need to place
+    - Notice this graph will be planar => 4 colorable
+- Application of the Hungarian Algorithm in Baseball Team Selection and Assignment
+    - https://pdfs.semanticscholar.org/bac1/19baf0ccd85b457376dfd17c1e4e54e0c36c.pdf
+    - TODO: read up on more
+- Where to place road networks to connect different cities?
+    - Soln
+        - Min spanning tree
+        - Weight potential road networks w distances
