@@ -1,0 +1,47 @@
+# Multiple Comparisons
+- Relevant when performing multiple tests, one should control for the increased probability of observing the desired result by chance
+
+## Problem With Multiple Comparison
+- If you reject the null hypothesis when you have probability of rejecting null hypothesis given its true = $P(T_i \ passes | H_0) = pval_i < \alpha$
+- But when you conduct multiple tests you're entire test is now $\cup pval_i$
+- Although notice the problem with this, now the pval for you're multiple tests is
+- $\cup pval_i \leq \sum^n p_i \leq n\alpha > \alpha$
+
+## Bonferonni
+- controlling the familywise type2 error rate
+- instead of rejecting H_0 based on $pval_i < \alpha$
+- Reject based on $pval_i < \alpha / n$ instead
+- => $\cup pval_i \leq \sum^n p_i \leq n(\alpha / n) = \alpha$
+- This overcorrects a lot though, and can result in super small significance requirements as n really increases
+
+## Benjamini–Hochberg
+- Controlling the FDR
+- Steps:
+    - Put the individual pvalues in order from smallest to largest
+        - Order them, 1 for smallest
+    - Compare each individual pval with its Benjamini-Hochberg critical value, (i/m)Q
+        - i = rank
+        - m = number of tests
+        - Q = FDR you decide
+    - The largest pval < (i/m)Q and all i less than this are considered significant
+- Choose your FDR before conducting any tests
+    - if cost of additional experiments is low and cost of false negative is high
+        - use a high FDR, .1 or .2
+- Less sensitive than the bonferonni
+
+## Assumptions
+- Tests are indep of each other
+    - This often does not hold
+    - Example: pairwise mean comparison using anova: http://www.biostathandbook.com/onewayanova.html#tukey
+
+## Anova For Mean Comparison
+- https://www.guru99.com/r-anova-tutorial.html
+- TODO: add more details
+    - Should have notes on this from STA303 
+
+#### Pairwise Mean Comparison
+- https://www.r-bloggers.com/r-tutorial-series-anova-pairwise-comparison-methods/
+
+
+## Resources
+- http://www.biostathandbook.com/multiplecomparisons.html
