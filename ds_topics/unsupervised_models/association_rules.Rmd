@@ -1,0 +1,71 @@
+# Association Rules
+
+## Why are they useful
+- Useful to derive associations between different items
+    - For example to determine which items are often bought at the same time from retail store
+        - While accounting for how often these are items are bought individually
+            
+## Definitions
+
+### Support
+- Support(A,B,..) = % of transactions in which A,B,.. all appear
+- Filtering to have this above some threshold is often recommended
+    - to ensure you have enough data to leverage LLN
+    - reduce the complexity required
+        - Notice if you have n items, and you want to consider all itemsets you'd have $n!$ possible itemsets to consider
+
+#### Confidence
+- Confidence(A => B) = $\frac{Support(A,B)}{Support(A)}$
+- Notice if A,B are always purchased whenever A is purchased this = 1
+- But if A is never purchased with B then this = 0
+    - And the as the number of times A is purchased without B increases the confidence -> 0
+- Intuitively this can be thought of as the probability that B is going to be purchased given A is purchased
+- Problem with confidence:
+    - Support(B) is heavily influencing the confidence
+    - As the more common B is purchased the more likely it will get purchased with A
+
+#### Lift
+- Lift(A => B) = $\frac{Support(A,B)}{Supp(A)Supp(B)}$
+- Represents how likely it is to purchase A and B together controlling for how likely they are to be purchased in general
+- This will then be increased as Supp(A) and Supp(B) decrease
+- Increasing Supp(B) now will no longer artificially inflate Support(A,B)
+- Can be intuitively thought of as $\frac{P(A \cap B)}{P(A)P(B)}$
+    - Recall A,B independent <=> $P(A \cap B)P(A)P(B)$
+    - $P(A \cap B) = P(A) + P(B) - P(A \cup B)$ 
+- Interpretation
+    - A and B are independent => lift = 1
+    - lift > 1 => Likely to be bought together
+    - lift < 1 => unlikely to be bought together
+
+## Apriori Algorithm
+- Reduces the number of item sets we need to examine
+- By assuming if an itemset is infrequent then all its supersets must also be infrequent
+    - {A} is infrequent => {A,B} is equally or more infrequent
+- Algorithm:
+    - step 0: Start w itemsets w a single item
+    - step 1: Determine support for these and keep the ones that have support above some threshold
+    - step 2: Using itemsets you kept from 1 generate all possible combinations between any 2 itemsets
+    - step 3: repeat 1 and 2 until no more new itemsets
+    - This will identify all itemsets to be used to compute confidence or lift
+- Limitations
+    - Computationally expensive, but can be reduced as you increase the support cutoff
+    - Spurious associations are likely, so you'll want to control for this
+        - Cross reference with a testing set to verify associations are spurious
+        - See multiple_comparisons.Rmd document for more details on handling spurious relations
+            - Can help set the support thresholds
+            - TODO: finish the multiple_comparisons.Rmd document
+    
+## Use Cases
+- Recommendation engines
+    - Recommend 
+- Customer segmentation
+- Can be used to create a graph to represent the relations between products 
+    - Which can then be used to help develop store layouts
+- Feature Engineering
+    - Want to derive associations in a network between ip addresses in order to identify which ips are associated with malicious ones
+- TODO: add more use cases
+
+
+## Resources
+- https://www.kdnuggets.com/2016/04/association-rules-apriori-algorithm-tutorial.html
+- Alik Sokolov's MMF ML slides Lec3
