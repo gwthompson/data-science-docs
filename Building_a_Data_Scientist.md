@@ -65,7 +65,18 @@
             - If you're interested getting the best results for NLP you may want to skip this and jump to the neural network section instead
             - That being said when you're focus is on specific words and not general context BOW could be preferred
             - Even if you have small data, you'll likely get better results using transfer learning over BOW models
+Also cool, but not used as frequently
     - Topics I use less often (but still useful):
+         - HW3-5
+            - At least skip initially and refer back to after you've got your hands dirty with the project
+            - HW3 is on mostly bag of words modelling, which is becoming obsolete
+            - HW4 is on recommendation engines, which are cool but not as used as frequently by us
+                - Although used very frequently in some places
+                - Good to understand at some point
+                - Not as essential as feature engineering and binary classification though IMO
+            - HW5 is on network analysis, also really cool
+                - Useful for feature engineering too
+                - But not used as frequently
         - Experimental Design: L21
         - Bayesian methods: L16-L18
             - Pretty sweet though
@@ -81,7 +92,7 @@
             - Used with big data
     - Doing the assignments would be good practice, and you can check your work
         - They have the solutions for the 2013 course here: https://github.com/cs109/content
-
+        
 #### ML
 - http://www-bcf.usc.edu/~gareth/ISL/ (good practical advice)
 - read sections of this book while trying to implement them on the project, for each section try to implement it, and understand all the complexities in relation to your task
