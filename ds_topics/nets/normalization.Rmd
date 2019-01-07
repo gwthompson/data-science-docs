@@ -92,7 +92,16 @@ x = tf.nn.relu(x)
 ## Understanding why it works
 - TODO: finish
 
-
+## Layer-Normalized RNNs
+- Can't apply batch normalization on test data that is longer than any of the sequences that were seen in training data
+    - The weights that are applied are the same for each step
+    - But the batch-norm statistics differ for each step
+    - So we need to compute and store the statistics for batch normalization for every time step
+- Layer-Normalization does not have this problem
+    - Bc you're computing the statistics across the features not across training cases
+    - So regardless of the size of the input these can be recomputed at every time step and aren't dependent on input size at all 
+- In a normal RNN there is the tendency for the magnitude of the summed inputs to each recurrent unit to grow or shrink at each time step, resulting in exploding or vanishing gradients
+    - Layer-Normalization helps to prevent this
 
 ## Resources
 - https://arxiv.org/pdf/1502.03167.pdf
