@@ -1,0 +1,99 @@
+# Batch Normalization
+- Normalize the input to each layer
+- Reduces training time, and difficulty
+
+## Why is it necessary
+- As you train a network each layers input is changing during training as the parameters in the previous layer changes
+    - This process in called internal covariate shift
+- This slows down training
+    - Bc in order to handle this problem you need lower learning rates
+- Makes training more difficult by:
+    - Requiring more careful parameter initialization
+    - Saturating non-linearities causing gradients to vanish
+- Similar to all the reasons to normalize data before you pass it into the network to begin with
+    - Prevents saturatation
+    - Variables on same scale for regularization
+    - Gradients not inequally effected by input scales
+
+## Benefits
+- Allows higher learning rates
+- Can be less careful about parameter initialization
+- Converges faster
+- Acts as a regularizer, in some cases alleviating the need for dropout
+    - As you don't get gradients 
+    
+## Downsides of Batch Normalization
+- $\mu$ and $\Sigma$ are derived based on the mini-batches
+    - But in order to do this effectively we must have reasonably sized batches
+- Difficult to apply on RNNs
+    - We need to compute the batch normalization for each time step
+    - And store it for each time step to compute the over sample mean and variance
+
+    
+## How does it work
+- Has a beneficial effect on the gradient flow through the network by reducing the dependence of gradients on
+    - the scale of the parameters
+    - or their initial values
+    
+## Prediction
+- During prediction the mean and variance are fixed
+- And derived based on all the per batch mean and variances that were observed during the training process
+- Because this it's important to pass a placeholder corresponding to training or not when using batch normalization
+
+## Example Implementation:
+
+```python
+# Set this to True for training and False for testing
+training = tf.placeholder(tf.bool)
+
+x = tf.layers.dense(input_x, units=100)
+x = tf.layers.batch_normalization(x, training=training)
+x = tf.nn.relu(x)
+```
+
+## Higher Order Effects
+- If one represent our loss function as a convex one, we can approximate a step in gradient descent as:
+    - $f(w - \epsilon g) \approx f(w_0) - \epsilon g^tg + \frac{1}{2} \epsilon^2 g^THG$
+- Notice then that based on the curvature of the loss function, we could actually be increasing by taking this step
+- In order to prevent this from happening we can use batch normalization to ensure the range of the magnitudes of the activations stay between reasonable  values (which are controlled by mean and varaince)
+    - This will ensure the higher order derivatives stay in reasonable ranges and results in more well-behaved gradient updates
+- More detail: http://mlexplained.com/2018/01/10/an-intuitive-explanation-of-why-batch-normalization-really-works-normalization-in-deep-learning-part-1/
+
+
+## Resources:
+- https://arxiv.org/pdf/1502.03167.pdf
+- https://towardsdatascience.com/batch-normalization-theory-and-how-to-use-it-with-tensorflow-1892ca0173ad
+- https://stackoverflow.com/questions/33949786/how-could-i-use-batch-normalization-in-tensorflow
+- http://mlexplained.com/2018/01/10/an-intuitive-explanation-of-why-batch-normalization-really-works-normalization-in-deep-learning-part-1/
+
+# Weight Normalization
+
+## Intro
+- TODO: finish
+
+## Resources:
+- http://mlexplained.com/2018/01/13/weight-normalization-and-layer-normalization-explained-normalization-in-deep-learning-part-2/
+
+# Layer Normalization
+- Does not work well w ConvNets
+- Effective with RNNs
+
+## Definition
+- Normalizes the inputs across features, instead of across the batch
+- In Layer normalization each hidden unit shares the same normalization terms $\mu$ and $\sigma$ but these vary per training case
+- In Batch norm the parameters per hidden unit vary, but remain the same per training case
+
+## Advantages
+- Independence between 
+- Statistics are independent between examples
+    - => Can use arbitrarily small batch sizes
+- Works well with RNNs
+
+## Understanding why it works
+- TODO: finish
+
+
+
+## Resources
+- https://arxiv.org/pdf/1502.03167.pdf
+- http://mlexplained.com/2018/01/13/weight-normalization-and-layer-normalization-explained-normalization-in-deep-learning-part-2/
