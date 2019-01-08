@@ -7,6 +7,7 @@
     - But this is missing a lot of opportunities to tailor this solution to our specific task
     - As the problem likely has a lot of context around it, which can be used to select the optimal parameters for the problem
 
+
 ## Example Custom Loss Functions
 
 - Emphasizing estimate to be closer to 1 or 0
@@ -42,6 +43,14 @@ def stock_loss(true_return, yhat, alpha = 100.):
     else:
         return abs(true_return - yhat)
 ```
+
+## FAQ
+- Could we use a neural network to optimize a model for those parameters for the mentioned loss functions?
+    - Would need to be concerned about saturation
+        - And we don't need to be concerned about it here?
+        - Well in the book he doesn't use a gradient-descent optimizer
+- Is fmin always appropriate?
+    - TODO https://twitter.com/parker_brydon/status/1082455848281006080
 
 ## Resources
 - https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter5_LossFunctions/Ch5_LossFunctions_PyMC3.ipynb
