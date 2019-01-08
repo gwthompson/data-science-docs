@@ -1,0 +1,47 @@
+# Loss Functions For Bayesians
+
+## Why Are Loss Functions Useful in Bayesian Statistics
+- When you're finished modelling as a bayesian, you end up w a posterior over your parameters
+- Then we must decide on a point estimate to make the model applicable
+- We could blindly go with the MAP, or develop the posterior based on which select a reasonable best guess 
+    - But this is missing a lot of opportunities to tailor this solution to our specific task
+    - As the problem likely has a lot of context around it, which can be used to select the optimal parameters for the problem
+
+## Example Custom Loss Functions
+
+- Emphasizing estimate to be closer to 1 or 0
+    - $L(\theta, \hat{\theta}) = \frac{|\theta - \hat{\theta}|}{\theta(1 - \theta)$
+- User is indifferent between sufficiently far away esimtaes
+    - $L(\theta, \hat{\theta}) = 1 - exp(-(\theta - \hat{\theta})^2)$
+- punish to different degrees dependent on whether your estimate is above or below the actual:
+
+```python
+def loss(true_value, estimate):
+     if estimate*true_value > 0:
+         return abs(estimate - true_value)
+     else:
+        return abs(estimate)*(estimate - true_value)**2
+```
+
+- few custom examples:
+
+```python
+def showcase_loss(guess, true_price, risk = 80000):
+    if true_price < guess:
+        return risk
+    elif abs(true_price - guess) <= 250:
+        return -2*np.abs(true_price)
+    else:
+        return np.abs(true_price - guess - 250)
+        
+def stock_loss(true_return, yhat, alpha = 100.):
+    if true_return * yhat < 0:
+        #opposite signs, not good
+        return alpha*yhat**2 - np.sign(true_return)*yhat \
+                        + abs(true_return) 
+    else:
+        return abs(true_return - yhat)
+```
+
+## Resources
+- https://nbviewer.jupyter.org/github/CamDavidsonPilon/Probabilistic-Programming-and-Bayesian-Methods-for-Hackers/blob/master/Chapter5_LossFunctions/Ch5_LossFunctions_PyMC3.ipynb
