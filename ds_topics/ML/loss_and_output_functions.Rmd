@@ -1,0 +1,87 @@
+# Loss Functions for Networks
+- "One recurring theme throughout neural network design is that the gradient of the cost function must be large and predictable enough to serve as a good guidefor the learning algorithm. Functions that saturate (become very ﬂat) underminethis objective because they make the gradient become very small. In many casesthis happens because the activation functions used to produce the output of thehidden units or the output units saturate."
+    - (175) http://www.deeplearningbook.org/contents/mlp.html
+
+# Categorical
+
+## Cross Entropy
+- = negative log-liklihood 
+    - "The negative log-likelihood helps to avoid this problem (gradient saturation) for many models. Several output units involve an exp function that can saturate when its argument is very negative. The log function in the negative log-likelihood cost function undoes the exp of some output units."
+        - (175) http://www.deeplearningbook.org/contents/mlp.html
+- cross-entropy with sigmoids is an effective loss function because when you're trying to minimize it, it only saturates when the classifier has chosen the right class
+    - (22 3.2.3) https://arxiv.org/pdf/1701.00160.pdf
+- Can pretty well always use this for classification
+    - Do need to be aware whether you use sigmoids or softmax output functions though on the final layer
+- Not appropriate for GANs though bc for GANs you need to go both ways, and in doing so has the potential to saturate
+- Example implementation for binary classification from: https://www.tensorflow.org/api_docs/python/tf/nn/weighted_cross_entropy_with_logits
+    - when targets == 1 => we punish with $-log(sigmoid(logits))$
+        - which will be minimized as logits as maximized (bc log is monotonic)
+        - $log(x) < 0$ when $x < 1$ => $-log(sigmoid(logits)) > 0$
+        - and $-log(sigmoid(logits)) -> 0$ as $logits -> \infty$
+    - when targets == 0 => we punish w $-log(1 - sigmoid(logits))$
+        - minned when logits minned
+    
+```python
+targets * -log(sigmoid(logits)) +
+    (1 - targets) * -log(1 - sigmoid(logits))
+```
+
+## Weighted Cross Entropy
+- More appropriate for imbalanced data if you're not resampling than cross-entropy
+- Higher pos_weight => 
+- Example intuition behind tf implementation of this below:
+    - pos_weight > 1 => when targets == 1, low logits will be punished more (FNs) than high logits when targets == 0 (FPs)
+    - and pos_weight < 1 => opposite
+
+```python
+targets * -log(sigmoid(logits)) * pos_weight +
+    (1 - targets) * -log(1 - sigmoid(logits))
+```
+
+### Resources:
+- https://www.tensorflow.org/api_docs/python/tf/nn/weighted_cross_entropy_with_logits
+- http://www.deeplearningbook.org/contents/mlp.html
+
+## Sigmoid and Softmax
+
+### Sigmoid
+- Saturates when input is extremely negative or positive
+
+### Softmax
+- Always strongly penalizes the most active incorrect prediction
+- Saturates when extreme differences between input values
+    - notice $softmax(z) = softmax(z + c) = softmax(z - max_i z_i)$
+
+### Resources:
+- (182) http://www.deeplearningbook.org/contents/mlp.html
+    - TODO look into others
+
+
+## KullBack Leibler divergence
+- pg 74: http://www.deeplearningbook.org/contents/prob.html
+- Not symmetric
+- Represents distances between distributions
+
+## FAQ
+- 
+
+
+# Continuous Loss Functions
+
+## $L^p$ Norm
+- $||x||_p = (\sum x_i^p)^{\frac{1}{p}}$
+- higher the power => more sensitive outliers
+
+### $L^2$
+- optimal estimate is the mean
+- = cross entropy over the normal distribution
+
+### $L^1$
+- optimal estimate is the median
+
+## $L_{\infty} norm
+- correpsonds to the max $x_i$ 
+
+## Resources:
+- http://www.deeplearningbook.org/contents/mlp.html
+    - 6.2.1.1, 6.2.1.2
