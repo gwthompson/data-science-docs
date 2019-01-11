@@ -101,6 +101,41 @@ max_node, max_bc
     - Whereas clustering can segment the points by a number of different criterion
 - TODO: add more detail on different options
 
+### Modularity
+- measures whether a division is good or not
+    - <=> many edges in communities and few between
+- = % of edges that lie in communites - E[% of edges that lie within communities of this network size | network is random]
+- in practice it is found
+that a value above about 0.3 is a good indicator of significant community structure in a network
+
+### Fast Greedy
+- Start w every vertex as its own community
+- Then combine the 2 vertices that maximize the modularity of the whole graph
+    - repeat
+- fast greedy just does this efficiently by skipping some unnesecary computations
+
+### Implementation
+```python
+def get_communities_from_nx_graph(G):
+    #convert from networkx to igraph 
+    G2 = ig.Graph.Adjacency((nx.to_numpy_matrix(G) > 0).tolist())
+    #make the igraph graph undirected :D
+    G2.to_undirected()
+    np.random.seed(SEED)
+    dendrogram = G2.community_fastgreedy() # consider edge_betweenness if you have less data it performs better
+    count_to_max_mod =  dendrogram.optimal_count # TODO: dbl check this maxes mod
+    print(f"number of clusters that max the modularity = {count_to_max_mod}")
+    ##### convert it into a flat clustering
+    clusters = dendrogram.as_clustering(count_to_max_mod)
+    # get the membership vector
+    membership = clusters.membership
+    return membership, dendrogram
+```
+
+### Resources
+- fast greedy: https://arxiv.org/pdf/cond-mat/0408187.pdf
+    - also covers Modularity
+
 
 ## Clustering
 

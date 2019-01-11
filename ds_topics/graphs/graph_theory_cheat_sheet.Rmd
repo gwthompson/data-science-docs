@@ -1,0 +1,508 @@
+---
+title: "final_cs"
+author: "Brydon Parker"
+date: "10/12/2018"
+output: html_document
+---
+
+# 1 Fundmaentals
+
+### 1.1 Graph intro (peterson, isomorphisms)
+- with n vertices, the number of simple graphs are $2^{n \choose 2}$
+- **peterson**
+    - 1.1.38: 2 non adjacent vertices share 1 neighbour
+    - 1.1.40: girth=5
+- **1.1.30 determining whether 2 graphs are isomorphic:**
+    - 1) same number of vertices
+    - 2) # edges
+    - 3) # length of circuit
+    - 4) degree of nodes?
+        - TODO: saw an example of different degrees? total degree same though
+    - **2 graphs iso iff complements iso**
+- 1.1.20 defn: isomorphism from simple G ot H is a bijection $f:V(G) -> V(H)$ st uv in E(G) <=> f(u)f(v) in E(H)
+- M(G) = incidence matrix, nxm m_ij = 1 iff v_i endpoint of e_j
+- 1.1.32: decomposition of graph = list of subgraphs st each edge appears exactly once int he list
+    - when considering whether a graph decomposes conosider whether the number of edges in the graph is divisible by the number of edges you're trying to decompose it into
+     - this will also tell you how many subgraphs you're looking for
+
+### 1.2 Paths, Cycles, Trails
+- 1.2.5 Every u,v walk contains a u,v path
+- 1.2.11 a graph w n vertices and k edges has at least n-k components
+- 1.2.14 an edge is  acut edge iff it belongs to no cycle
+- 1.2.18 thm: a graph is bipartite iff it does not contain an odd cycle
+- 1.2.24 defn: a graph is eulerian if it has a closed trail containing all edges
+- 1.2.25: Lemma if every vertex of $G$ has degree >= 2 => G contains a cycle
+- 1.2.26 **thm: a graph $G$ is Eulerian iff it has at most one nontrivial component and its vertices all have even degree**
+- 1.2.27 Every even graph decomposes into cycles
+- **graph w all vertices of degree 2 is a cycle**
+
+### 1.3 Vertex Degrees and Counting
+- **1.3.3 degree sum formula $\sum d(v_i) = 2 e(G)$**
+- 1.3.6 k-regular graph has nk/2 edges
+- 1.3.15 G simple n-vertex graph w $\delta(G) >= (n-2)/2$ => connected
+- **1.3.28: dis are the degree sequence of a graph iff $\sum d_i$ is even**
+- 1.3.31 thm: for $n>1$ an integer list $d$ of size $n$ is graphic iff $d'$ is graphic, where d' is obtained from d by deleteing its largest element ($\Delta$) and subtracting 1 from its $\Delta$ next largest elements
+    - graphic <=> degree seq of simple graph
+    
+### 1.4 Directed Graphs
+- 1.4.18 propn: In a digraph $G$ \sum d^+(v) = e(G) = \sum d^-(v)$
+- propn 1.4.30 every tournament has a king
+
+# 2 Trees and Distances
+
+### 2.1 Basic Properties
+- **2.1.4: tree <=> conn and no cycles <=> conn and n-1 edges <=> no cyles and n-1 edges <=> 1 u,v path for all u,v**
+- 2.1.5 **every connected graph contains a spanning tree, every edges in a tree is a cut edge, add one edge to tree forms exactly 1 cycle**
+
+### 2.2 Spanning Trees and Enumeration
+- 2.2.1: Algorithm prufer code: prodcution of $f(T) = (a_1,..,a_{n-2})$
+    - input: a tree $T$ with vertex set $S \subset N$
+    - iteration: at the $i$th setp delet the least remaining leaf, and let $a_i$ be the neighbour of this leaf
+- 2.2.3 Thm: Cayley's formula
+    - for a set $S \subset N$ of size $n$, there are $n^{n-2}$ trees w vertex set $S$
+    - useful for determining numbe rof possible trees in a complete graph
+- finding number of spanning trees:
+    - **2.2.8: if e is not  aloop => $\tau(G) = \tau(G - e) + \tau(G \cdot e)$**
+    - 2.2.10: if G is a connected loopless graph w **no cycle of length >= 3** => $\tau(G)$ is the product of edge miltiplicities
+    - 2.2.6: a square has 4 spanning trees
+        - including a diagonal edge or not bring in 4 more spanning trees
+- **2.2.12 $\tau(G) = (-1)^{s+t}det(Q*)$**
+    - given a loopless graph G let Q be the graph laplacian
+    - Q = [d1,..,dn] I - Adjacency matrix
+    - find Q* by deleing row s and column t from Q
+    - the $\tau(G) = (-1)^{s+t}det(Q*)$
+
+### 2.3 Optimization and Trees
+- **Kruskals algo (produces min weight spanning tree)**
+    - init: set $E(H) = \emptyset$
+    - iteration from text:
+        - if next cheapest edge joins 2 comps of H => include it otherwise discard it
+        - terminate when connected
+- **Dijstras algo (produces shortest path)**
+    - start w S just u, and t(v) will be the weight on the adjacent edges of u, and infinity for the rest
+    - then for some $v$ outside $S$ such that $t(v) = min_{z \notin S} t(z)$, add $v$ to $S$
+        - explore all edges from $v$ to update the tentative distances: $t(z)$ to $min\{t(z), t(v) + w(v,z)\}$
+        - so consider all edges from $v$ now to other vertices and update the tentative distances based on whether the sum of the weights are smaller or not frmo u to v to z or whether u to z
+- **BFS algo (defines distances? unweighted)**
+    - input = unqeighted graph, and start vertex u
+    - init R = {u}, S = empty, d(u,u)=0
+    - iter: 
+        - as long as R is not empty we search from the 1st vertex v of R
+        - the neighbours of v not in $S \cup R$ are added to the back of R as assigned distance d(u,v)+1
+        - then v is removed from the front of R and placed in S
+- bfs vs dijkstres? bfs is faster but cant handle weighted graphs
+
+# 3 Mathcings and Factors
+
+### 3.1 Mathcings and Covers
+
+## Indep Sets and Covers
+
+### defns:
+- 3.1.1
+    - $M$ = matching = subset of edges with no shared end points
+    - the vertices incident to the edges of $M$ are called saturated, rest called unsaturated
+    - mathcing is perfect if it saturates every vertex
+- 3.1.4: 
+    - maximal mathing is a matching that cannot be enlarged
+    - maximum matching = matching w at least as many edges as any other in G
+- 3.1.6:
+    - M-alternating path = path that alternates between edges in M and edges not in M
+    - M-augmenting path = alternating path whose endpoints are unsaturated by M
+        - => you have endpoints that are not incident (sharing a vertex with) edges in M
+    - RMK: augmenting => not maximal <=> maximal => not augmenting
+- 3.1.7 symettric diff of G anf H $G \Delta H$
+    - symettric diff of G anf H = edges of G which are not edges of H and edges of H that are not edges of G
+- 3.1.20
+    - $\alpha(G)$ = max size of indep set in vertices of G
+    - $\alpha ' (G)$ = max size of matchgin
+    - $\beta(G)$ = min size of vertex cover
+    - $\beta ' (G)$ = min size of edge cover
+    - alphas = maxes, betas = mins
+    - ' => edges
+    
+
+### mathcings
+- notice $K_{n,n}$ has n! mathces
+- notice a graph w odd degree cant have a perfect mathcning
+- when finding a maximum, look for cutting off edges that wont limit you by blocking off that vertex
+
+### **3.1.10 thm: a matching M in G is a maximum iff G has no M-augmented path**
+
+### **3.1.11 thm: Halls An X,Y bigraph $G$ has a matching that saturates X iff $|N(S)| \geq |S|$ fir all $S \subset X$**
+
+### **Konig thm: 3.1.16: if $G$ is a bipartite graph => maximum siz eof a matching in $G$ = minumum size of a vertex cover of $G$**
+
+
+
+
+
+## 3.2 Mathcing Algorithms and Applications
+
+### **3.2.1 Augmenting Path Algorithm (To Find a Maximum Mathcing and Min Vertex Cover for Bipartite graph)**
+- input: $X,Y$ bigraph $G$ mathcing $M$ in $G$ and the set $U$ of $M$-unsaturated vertices in $X$
+- idea: 
+    - explore $M$-alternating paths from $U$, letting $S \subset X$ and $T \subset Y$ be the sets of vertices reached
+    - mark vertices of S that have been explored for path extensions
+    - as a vertex is reached, record the vertex from which it is reached
+      - this allows us to create the min vertex cover
+- init: S=U and T = empty
+- iter:
+    - if S has no unmarked vertex, stop and report $T \cup (X - S)$ as a min cover and $M$ as a maximum matching
+        - why?
+            - S has no unmarked => we've explored all x in S => we've added everything we could
+    - otherwise select an unmarked $x \in S$
+    - to explore $x$ consider each $y \in N(x)$ st $xy \notin M$
+        - => neighbours of x that aren;t in our mathcing
+    - if $y$ is unsaturated by our mathcing terminate and report an M-augmenting path from $U$ to $y$
+        - bc U is not in M and $y$ not in $M$ => augmenting path
+        - => not a maximum mathcing
+    - if $y$ is saturated => mathched to some $w \in X$ by $M$, include $y$ in $T$ and include $w$ in $S$
+        - we throw this in S so that we don't use it in our min vertex cover, bc we just added y to T => is in our vertex cover
+        
+### Weighted bipartite mathcning
+- rmk: 
+    - notice if our graph is not all of Kn,n we can insert edges and assign them weight 0
+    - can solve the min weight perfect mathcing using the max by replacing wi,j with K-wi,j for some large number K
+- 3.2.5 ex:dd
+    - farming company w n farms and n plants
+    - cant have 2 farms connected to the same plant and vice versa
+        - => WTF: mathcing that will maximize profits based on values of the edges
+    - profit from sending farm i output to plant j = wij, place this on edge xiyj
+    - the govt claims too much corn is being produced so it will pay tje company not to process corn
+        - pay ui if the company agrees not to use farm i and vj if the company doesnt use plant j
+    - if ui+vj < wi,j => company makes more money using the edge xiyj than by taking the govt money 
+    - the govt wants to min $\sum u_i + \sum v_j$
+
+### 3.2.6 defn:
+- a transversal of an nxn matrix consitst of n positions one in each row and each col
+- finding a transversal w min sum = assignment problem
+- this is the matrix formulation of the max weighted matching problem, where wij>=0 assigned to xiyj in Kn,n 
+    - total weight = w(M)
+- **weighted cover is a choice of labels ui,..,un and vj,..,vm st ui+vj >= wi,j**
+    - cost of cover (u,v) is sum ui + sum vj = c(u,v)
+- equality subgraph Gu,v for a cover(u,v) is the spanning subgraph Kn,n having the edges xi,yj st ui+vj=wi,j
+    - => weights are equal to the costs from the cover
+    
+### 3.2.7 Lemma: for  aperfect mathcing $M$ and cover $(u,v)$ in a weighted bipartite graph $G$ $c(u,v) \geq w(M)$. And $c(u,v)=w(M)$ iff M has edges xiyj st ui+vj=wij => M and (u,v) are optimal
+- w(M) is maximum and c(u,v) is minimum
+- **essnetially you're just trying to find a cover st when you add u_i + v_j you're going to be bigger than wij => you'll have chosen the largest possible pairing**
+    - bc really the objective is to identify a mathcing to max value given the weight matrix
+    - <=> choose transversal of weight matrix to max value
+    - so were not really minning any cost, were just using this principle to max the weights on the mathcing
+
+### **3.2.9: Hungarian Algorithm (To Find a Maximum Weight Mathcing and Min Cost Vertex Cover for Bipartite graph))**
+- idea: initialize the cover st you have equality, alter to get a perfect matching
+- 1. initialize the cover, and get the original excess matrix
+    - initialize using 0s on the top, and max weight along the LHS
+    - then fill in the excess matrix
+        - subtract the weights from u_i + v_j
+- 2. we idenitify a maximum mathcing of G_u,v by choosing 0s, st you have no 2 0s in the same row or col
+    - we know this is a maximum bc G_u,v on has edges where you get a 0
+    - picking a 0 from each row or col => have the maximum number of possible edges bc you have a bipartite graph
+    - notice: these represent a vertex cover, and a covering set of size <n => progress towards a soln
+        - since the next weighted cover costs less
+        - TODO: expand
+    - try to select 0s st you'll cancel out more 0s in the next col
+- 3. idenitify R and T, and add $\epsilon$ to $v_j \in T$ and subtract it from $u_i \in R$
+    - you add and subtract in this way to maintain equality
+    - T = cols w 0 and R = rows w 0
+    - $epsilon = min\{u_i + v_j - w_{ij} : x_i \in X-R, y_j \in Y-T\}$
+        - for all i,j st you're not in any row or col that has been picked
+    - **note: you wont have R and T on opposite ends of an edge, bc they're apart of a vertex cover**
+    - **note: if you have > 1 0 in a row or col that needs to be in R or T**
+        - note: you dont need both Rs and Ts can have all one or the other
+    - note: epsilon is just the min of the values, dont go and subtract again
+- 4. update the excess matrix
+    - u_i+v_j - w_i,j
+    - add $\epsilon$ to values in T cols
+    - remove $\epsilon$ from values not in R rows
+    - quick ref:
+        - crosses will up one
+        - Ts w out R will stay same, 
+        - not Rs will drop
+        - Rs one own will stay same
+- 5. how do you know when you're done?
+    - have a 0 in each row and each col
+- How do we know were still balanced?
+    - take the sum over the weights and costs and see they're all equal
+    - think about what you're adding and subtracting to each row and you see
+
+### Applications of hungarian
+- can be anything with costs, in which case you just set w(M) = 0 
+    - but can also handle stuff more complicated if you want to ensure that these costs are above some value (wi,j)
+- https://en.wikipedia.org/wiki/Hungarian_algorithm
+- Assigning people to different tasks each of which costs different amounts
+- Can also be tasks where you do need a weighted cover too
+    - that satisfy the constraint that ui+vj >= wij
+    - such as the farming example above, or 
+
+## 3.3 Mathcings inGeneral Graphs
+
+### defns and rmks
+- factor of a graph = spanning subgraph of $G$
+- k-factor = spanning k-regular subgraph
+- odd componentn of a graph = component of odd order (odd num vertiecs)
+- $o(H)$ = num odd components
+- 1-facor almost a perfect mathcing, just that the perfect mathcing denotes the edge set, whereas the 1-factor = subgraph
+    - 1-factor is just selecting a subgraph all w degree 1 that spans the entire graph
+    - <=> decomposing graph into P2s
+    
+
+### **3.3.3 Tuttes thm: A graph $G$ has a 1-factor iff $o(G-S) \leq |S|$ for every $S \subset V(G)$**
+
+### **3.3.7: largest number of vertices saturated by a mathcing in $G$ = min_{S \subset V(G)} {n(G) - d(S)} st $d(S) = o(G-S) - |S|$**
+- nice way to show a maximum mathcing is indeed maximium size
+
+### factors in regular graphs
+- 3.3.8 Every 3-regular graph w no cut edge hsa a 1-factr
+- 3.3.9 Every regular graph of even degree has a 2-factor
+
+
+# 4 Connectivity and Paths
+
+## 4.1 Cuts and Connectivity
+
+### defns
+- connectivity of G = $k(G)$ is the min size of $S$ st $G-S$ is disconn or 1 components
+- $G$ is $k$-connected if its connectivity is >= k
+- a block of a graph is a maximal connected subgraph of $G$ that has no cut vertex
+
+### exs 
+- 4.1.2: a connectivty of complete = n-1, but for all other graphs $k(G) \leq n(G)-2$
+
+### **4.1.9 if $G$ is a simple graph => $k(G) \leq k'(G) \leq \delta(G)$**
+
+### 4.1.19 propn: 2 blocks in a graph share at most 1 vertex
+- see ex 4.1.7 for an example
+- blocks can be nested though
+    - 2 maximally connected subgraphs and then another block connecting 2 vertex in these graphs
+
+### tricks
+- cna have a sep set by removing all the edges around a node => G is k conn for $k \leq \delta(G)$
+
+## 4.2 k-conn Graphs
+
+
+### **4.2.3 Expansion Lemma: If G is a k-conn graph and G' is obtained from G by adding a new vertex y w at least k neighbours in G => G' is k-conn**
+
+### **4.2.4 thm: characterization of 2-conn graphs w > 3 vertices:**
+- a) G is conn and has no cut vertex
+- b) for all x,y in V(G) there are internally disjoint x,y-paths
+- c) for all x,y in $V(G)$ there is a cycle though x and y
+    - 2-conn iff for all x,y in $V(G)$ there is a cycle though x and y
+- d) $\delta(G) \geq 1$ and every pair of edges in G lies on a common cycle
+
+### 4.2.15 defn
+- lam(x,y) = max # of pairwise internally disjoint xy-paths
+    - internally disjoint xy-path = paths that share no internal vertices other than the endpoints
+- k(x,y) = min size of an x,y-cut
+    - x,y-cut = $S$ st in $G-S$ x and y are not connected
+- X,Y-path refers to a path that intersects X in exactly one point (endpoint) and Y in exactly one point (endpoint)
+
+### **4.2.17 thm: (Mengers)  k(x,y) >= lam(x,y)**
+
+### **4.2.19 thm k'(x,y) >= lam'(x,y)**
+
+### tricks
+- use the dual problems for short proofs of optimality
+    - show that $k(x,y) = \lambda(x,y)$, 
+        - bc you know that $k(x,y) \geq \lambda(x,y)$
+        - $k(x,y)$ = m number of vertices you can remove to disconnect the 2 vertices
+        - => if your vertex cut has size = $\lambda(x,y)$ => your vertex cut must be the min vertex cut
+        - same idea for max number of internally disjoint paths
+    - and for the edges $k'(x,y) = \lambda'(x,y)$
+    
+## 4.3 Network Flows
+
+### defns
+- 4.3.2
+    - $val(f) = f^-(t)-f^+(t)$ = netflow into the sink
+    - maximum flow = feasible flow of maximum value
+      - that's the onjective, maximize amount of flow into the sink
+- 4.3.4
+    - when f is a feaible flow in a network N => an **f-augmenting path** is a source-to-sink path in the underlying G st for all $e \in E(P)$:
+        - a) if P follows e in the forward direction $f(e) < c(e)$
+        - b) if P follows e in the backward direction => $f(e) > 0$
+    - tolerance of P = $min_{e \in E(P)} \epsilon(e)$
+        - st $\epsilon(e) = c(e)-f(e)$ when $e$ is forward on $P$ and 
+        - $\epsilon(e)=f(e)$ when $e$ is backward on P
+        - => smallest distance between flow and capacity (if its in the forward direction)
+        - and smallest flow if its in the backward direction
+    - forward on P => when P goes over this edge its going in the forward direction
+        - http://www.mathcs.emory.edu/~cheung/Courses/323/Syllabus/NetFlow/aug-path.html
+- 4.3.6
+  - **source/sink cut [S,T] = edges from the source set S to a sink set T**, where S and T partition the set of nodes
+      - w s in S and t in T
+  - capacity of the cut [S,T], written cap(S,T) is the total capacity on the edges os [S,T]
+
+### 4.3.5 Lemma: if $P$ is an $f$-augmenting path w tolerance $z$ then changing flow by +z on forward edges and -z on backward edges results in a feasible flow f' st $val(f') = val(f)+z$
+
+### **4.3.8 $val(f) \leq cap(S,T)$ (f feasible flow)**
+
+### 4.3.11 in every network, the max value of the feasible flow = min capacity of source/sink cut
+
+### **4.3.9: fred fulford**
+- https://www.hackerearth.com/practice/algorithms/graphs/maximum-flow/tutorial/
+- WTF maximal flow in this graph, from s to t
+- constraint: 
+    - flow on edge cant exceed capacity of the edge
+    - inflow = outflow for all vertices but s and t
+- algorithm
+    - 1) start w init flow = 0
+    - 2) while there is f-augment paths (from s to t)
+        - add the path to the flow
+        - recall f-augmenting path <=> path st e in forward => f(e) < c, backward => f(e)>0
+            - **Note: f(e) > 0 => you can only traverse backwards on an edge if there's positive flow on it already, otherwise you'll be subtracting flow from an edge w 0 flow which would give you f(e) < 0**
+    - 3) then you can add the tolerance to this path
+        - you subtract on the backwards paths though
+    - 4) repeat until you cant go any longer
+- example
+    - notice see which capacity you can go in from s, try to fill up the neighbours of s and you're done
+    - can use the backward edge if after you minned the tolerance from it is > 0 still
+- if optimal max flow => min cut = max flow (4.3.11)
+    - min cut = flow on edges that are separating the 2 sets
+    - min cut you only count capacity
+    - cutting graph into 2 subsets in a way that gives you the min capacity
+    - cap(S,T) = capacity of edges leaving S and going to T, not T to S
+
+### 4.3.12: if all capacities are integer capacities => theres a max flow assigning integral (integer) flow to each edge => some max flow can be partitions into flows of unit value along paths from s -> t
+
+
+### 4.3.16 Baseball elimination problem
+- edges on s capacity = W-wi
+- connect to xi (inf weighted) 
+- which connect to y_i,j (weighted w ai,j = number of remaining games between xi and xj)
+- weights on edges into t not from y_i,j = 0
+- rest of the weights = inf
+- 
+
+# 5 Coloring of Graphs
+
+## 5.1 Vertex Coloring
+
+### 5.1.4 defn
+- if $\chi(H) < \chi(G) = k$ for every proper subgraph H of G => G is k-critical
+    - notice can just remove each vertex once, if all those satisfy => the sub graphs of those will too
+    - and use symmetry too
+- join in simple graphs G and H is the graph obtained from the the disjoint union of G+H by adding the edges $\{xy:x \in V(G), y \in V(H)\}$
+- H+G = disjoint union of G and H = union of 2 graphs that are disjoint
+
+### 5.1.6 def
+- clique number = w(g) = max size of a clique in G
+
+### **5.1.7 propn: $\chi(G) \geq w(g), \chi(G) \geq n(G)/\alpha(G)$**
+- 1st bc every element in clique needs a different color
+- 2nd bc each color class is an indep set => has at least $\alpha(G)$ vertices
+- $\alpha(G) =$ max size of indep set
+
+### **5.1.12 Greedy Coloring**
+- given a vertex ordering $v_1,...,v_n$ of $V(G)$
+- color them in this order, assigning to $v_i$ the smallest indexed color, not already used in its lower-indexed neighbours
+    - => color each vertex as the smallest color that has not been used by one of its neighbours
+
+### **5.1.13: propn $ \chi(G) \leq \Delta(G) + 1$**
+- each vertex has at most $\Delta(G)$ earlier neighbours => greedy coloring cant use more than $\Delta(G)+1$ colors
+    - why +1? bc a given vertex can have $\Delta(G)$ earlier neighbours => itself would need to be another color
+
+### **5.1.22: Brook's thm: if $G$ is a conn graph other than a complete graph or an odd cycle => $\chi(G) \leq \Delta(G)$**
+
+
+# 6 Planar Graphs
+
+## 6.1 Embeddings
+
+### defns
+- 6.1.5
+    - open set in the plane is a set $U \subset R^2$ st for every $p \in U$ all points w in some small distance from p belong to U
+    - a region = open set U thta contains a polgonal u,v-curver for ever pair of u,v in U
+    - faces of a planar graph are the maximal regions of the plane that contain no point used in the embedding
+- 6.1.7
+    - dual graph G* of a plane graph G = plane graph whose vertices correspond to the faces of G, and the edges of G* correspond to the edges of G as follows:
+        - if e is an edge of G w face X on one side and face Y on the other => endpoints of e* are x,y
+            - **=> can have a loop if there's an edge with the same face on either side**
+        - => order of degree in G* = number of edges bounding this face
+- 6.1.17
+    - a graph is outerplanar if it has an embeddings w every vertex on the boundary of the unbounded face
+### 6.1.5 rmk
+- understanding faces better: http://discretetext.oscarlevin.com/dmoi/sec_planar.html
+    - sections that a planar embedding would divide the space into 
+    - just think of drawing a graph with no edges crossing, each of these regions that the graph has divided the space into is considered a face
+
+
+
+### **6.1.21 Eulers thm: if a connected plane graph $G$ has n vertices, e edges, and f faces, => $n-e+f=2$**
+- might be the most important theorem in this course
+
+ ### **6.1.23 if $G$ is a simple planar graph w >= 3 vertices => $e(G) \leq 3 n(G) - 6$**
+ - also if its triangle  free: $e(G) \leq 2n(G)-4$
+ 
+ ### **6.1.26: G is maximal plane graph <=>** 
+- G has 3n-6 edges
+- G has a triangluation <=> every face boundary is a 3-cycle
+ 
+ ## 6.2
+ 
+ ### defns
+ - 6.2.8: cvx embedding of a graph is a planar embedding in which each face boundary is a cvx polygon
+    - recall:
+        - planar embedding = drawing (f) of a graph G that has no crossings
+        - face = maximal region that has no points that are in embeddings
+            - => its some set in R2 st every point in this set has no y, st f(v)=y
+ 
+ ### **6.2.2 A graph is planar iff it DN contain a subdivision of $K_5$ or $K_{3,3}$**
+ - **dont forget to check for subdivisions**
+ - start by looking for indep sets of size you need
+    - look across the graph
+ 
+ ### 6.2.9 Lemma: every 3-conn graph G w at least 5 vertices has an edge e st $G\dot e$ is 3-conn
+
+ ### tricks
+ - can show non planar w peterson, show its conn and n-e+f != 2
+ 
+ ## 6.3
+ 
+ ### **6.3.1 thm: Every planar graph is 5-colorable (also 4-colorable)**
+- but its also true that Every planar graph is 4-colorable
+
+### every planar graph is 6-colorable
+- see pictures, he uses 6.1.23, and avg degree, and fact that coloring <= min degree
+
+
+### defns
+- 6.3.11: crossing number = min number of crossings in a drawing of G in the plane
+
+
+### 6.3.12
+- we can consider number of crossings by considering the maximal planar subgraphs if this drawing then all every edge in G not in H must be a crossing
+    - => at least $e(G) - e(H)$ crossings
+- if H has n vertices then $e(H) \leq 3n - 6$ (bc its planar)
+    - and if H has no triangles => $e(H) \leq 2n - 4$
+
+
+# 7 Edges
+
+## 7.1 Line Graphs and Edge Coloring
+- when solving for line graphs, easiest to start by drawing a circle of the vertices
+
+### **7.1.10 thm: if G is a simple graph:  $ \Delta(G) \leq \chi'(G) \leq \Delta(G) + 1$**
+
+### **7.1.7 if G is bipartite => $\chi'(G) = \Delta(G)$**
+
+### tips
+- when solving for line graphs: find the degree of each vertex to start, realize how they can be represented, order nicely
+
+# QAs
+- length of a path = k => path w k edges
+    - Pn = path w n vertices
+- maximum vs maximal:
+    - maximal = largest it could get, cant grow anymore
+    - maximum = the largest there is
+- in hungarian, why are we finding the maximum matching?
+    - bc you dont actually change the weights of W(M)
+    - you just choose how to pair off the vertices in order to maximize the result of the final mathcing
+    - ui and vi are what you're choosing, given some w(M)
+- whats the point of minimizing the cover then?
+    - it just allows us to solve for the maximum matching 
+    - bc we know $\alpha'(G) \leq \beta(G)$ 
+        - =>  if we can solve for $\alpha'(G) = \beta(G)$ => weve found our maximum matching
