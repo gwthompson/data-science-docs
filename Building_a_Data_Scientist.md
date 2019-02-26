@@ -39,6 +39,11 @@
 - Steps
     - 1. Make some features
     - 2. Build an xgboost model and evaluate, then engineer more features to get a logistic regression model to perform as effectively
+        - Evaluate using Precision Recall and ROC curves (and the area under them), understand the complexities between them
+        - Very useful in industry
+    - 3. Investigate model bias
+        - Looking at False Positives and False Negatives are good ways to do this, see slides for more details
+        - Ensuring no model bias is much more important than model selection in the real world
 - data: https://www.kaggle.com/c/home-credit-default-risk
     - I'd recommend you put in a db (good practice)
 - example: https://github.com/parker84/MMF_UofT/tree/master/credit_risk
@@ -124,16 +129,32 @@ Also cool, but not used as frequently
     - If all else fails you can ask me :)
 
 #### b) Do a project
-- https://www.kaggle.com/c/twitter-sentiment-analysis2/data
+- like: https://www.kaggle.com/yufengdev/bbc-fulltext-and-category
+    - Something with text is preferred
+    - Text classification is a good starting point, and is a very useful problem to know how to do well
+- Recommendations for project:
+    - Start with transfer learning 
+        - like https://tfhub.dev/google/universal-sentence-encoder/2
+    - Invest time into understanding how to optimally tune a model
+        - http://cs231n.github.io/neural-networks-3/
+    - Deeply understand the neural net optimization
+        - http://www.cs.toronto.edu/~rgrosse/courses/csc421_2019/slides/lec07.pdf
+        - http://www.cs.toronto.edu/~rgrosse/courses/csc421_2019/readings/L07%20Optimization.pdf
+    -  Evaluate using Precision Recall and ROC curves (and the area under them), understand the complexities between them
+        - Very useful in industry
+        - Especially if you treat these as non-mutually exclusive, which you might want to try out
+    - Investigate biases!
+        - These are more important than the model you select, and are what will give very poor performance in prod
+        - Looking at False Positives and False Negatives are good places to start for this
+        - Often passing additional data, or altering the preprocessing can drastically reduce these biases when dealing with text
+- use all the tools mentioned above
+- I'd recommend using tensorflow as well, as it will force you to develop a deeper understanding of the problem and give you unlimited flexibility for the networks you can build in the future
+    - but pytorch is good too
 - Then try to improve further:
     - Implement different models
     - Consider different preprocessing techniques, can you create more data?
     - Make sure you understand how these models are working, what are the tradeoffs, why is one performing better than the other, how could you exlpain this to a laman or a fellow Data Scientist
         - You should be able to justify why one performs better than the other, and should have an idea before you implement it
-    - What are the potential biases?
-- use all the tools mentioned above
-- I'd recommend using tensorflow as well, as it will force you to develop a deeper understanding of the problem and give you unlimited flexibility for the networks you can build in the future
-    - but Keras is good too
 
 #### c) Learn More and Apply this to your project
 - Deep learning for NLP: http://cs224d.stanford.edu/syllabus.html
